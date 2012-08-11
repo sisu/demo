@@ -21,7 +21,7 @@ _start:
 	xor	ebp,ebp
 	inc	ebp
 	; assumes df=0 ; cld
-	mov	esi,sdlfuncs
+;	mov	esi,sdlfuncs
 	mov	edi,sdlptrs
 .loadloop:
 	mov	eax,[libs+4*ebp]
@@ -29,20 +29,20 @@ _start:
 	push	2	; RTLD_NOW
 	push	eax
 	call	dlopen
-	mov	[esp],eax
+	push	eax
 
-	xor	ebx,ebx
-	mov	bl,[funcounts+ebp]
+	mov	esi,f0
 
 .symloop:
-	xor	eax,eax
-	lodsb
-	add	eax,f0
-	mov	[esp+4],eax
+	mov	[esp+4],esi
+	inc	esi
 	call	dlsym
+	test	eax,eax
+	jz	.notfound
 	stosd
-	dec	ebx
-	jnz	.symloop
+.notfound:
+	cmp	esi,endstrs
+	jne	.symloop
 
 	dec	ebp
 	jz	.loadloop
@@ -52,6 +52,7 @@ _start:
 	push	600
 	push	800
 	call	[SetVideoMode]
+	xor	ebx,ebx
 	push	ebx ; 0
 	call	[ShowCursor]
 	push	aspec
@@ -107,10 +108,6 @@ sdllib:	db	"libSDL-1.2.so.0",0
 gllib:	db	"libGL.so",0
 libs:	dd	gllib,sdllib
 
-sdlfuncs:	db	S_SetVideoMode-f0,S_GetTicks-f0,S_PollEvent-f0,S_Swap-f0,S_ShowCursor-f0,S_OpenAudio-f0,S_PauseAudio-f0,S_Quit-f0
-glfuncs:	db	gVertex2i-f0,gBegin-f0,gEnd-f0,gCreateShader-f0,gShaderSource-f0,gCompileShader-f0,gCreateProgram-f0,gAttachShader-f0,gLinkProgram-f0,gUseProgram-f0,gColor-f0,gGetError-f0
-funcounts:	db	(funcounts-glfuncs),(glfuncs-sdlfuncs)
-
 f0:
 S_SetVideoMode:	db	"SDL_SetVideoMode",0
 S_GetTicks:	db	"SDL_GetTicks",0
@@ -133,6 +130,8 @@ gLinkProgram:	db	"glLinkProgram",0
 gUseProgram:	db	"glUseProgram",0
 gColor:	db	"glColor3us",0
 gGetError:	db	"glGetError",0
+
+endstrs:
 
 ;fshader:	db	"void main(){gl_FragColor=vec4(1,0,0,1);}",0
 fshader:	incbin	"t.frag.small"
