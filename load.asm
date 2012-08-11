@@ -32,7 +32,6 @@ _start:
 	push	eax
 
 	mov	esi,f0
-
 .symloop:
 	mov	[esp+4],esi
 	inc	esi
@@ -78,9 +77,6 @@ _start:
 
 	call	introloop
 
-;	call	[Quit]
-	EXIT
-
 playmusic:
 	mov	edi,[esp+8]
 	mov	ecx,[esp+12]
@@ -116,7 +112,7 @@ S_Swap:	db	"SDL_GL_SwapBuffers",0
 S_ShowCursor:	db	"SDL_ShowCursor",0
 S_OpenAudio:	db	"SDL_OpenAudio",0
 S_PauseAudio:	db	"SDL_PauseAudio",0
-S_Quit:	db	"SDL_Quit",0
+;S_Quit:	db	"SDL_Quit",0
 
 gVertex2i:	db	"glVertex2i",0
 gBegin:	db	"glBegin",0
@@ -129,7 +125,7 @@ gAttachShader:	db	"glAttachShader",0
 gLinkProgram:	db	"glLinkProgram",0
 gUseProgram:	db	"glUseProgram",0
 gColor:	db	"glColor3us",0
-gGetError:	db	"glGetError",0
+;gGetError:	db	"glGetError",0
 
 endstrs:
 
@@ -148,7 +144,7 @@ SwapBuffers:	resd	1
 ShowCursor:	resd	1
 OpenAudio:	resd	1
 PauseAudio:	resd	1
-Quit:	resd	1
+;Quit:	resd	1
 
 glptrs:
 Vertex2i:	resd	1
@@ -162,7 +158,7 @@ AttachShader	resd 1
 LinkProgram	resd 1
 UseProgram	resd 1
 Color	resd 1
-GetError:	resd 1
+;GetError:	resd 1
 
 
 music:	resw	(44100*10)

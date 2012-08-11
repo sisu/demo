@@ -1,7 +1,7 @@
-#AOBJ=load.o
-#COBJ=draw.o synth.o
-AOBJ=load.o draw.o
-COBJ=synth.o
+#AOBJ=load.o draw.o
+#COBJ=synth.o
+AOBJ=load.o draw.o synth.o
+COBJ=
 OBJ=$(AOBJ) $(COBJ)
 #OBJ=$(AOBJ)
 #CFLAGS=-Wall -m32 -Os -fomit-frame-pointer -flto -ffast-math
