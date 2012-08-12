@@ -6,6 +6,8 @@ global	GetTicks,PollEvent,SwapBuffers
 global	Recti,Color
 global	music
 
+%define F(f) [ebp + (f-sdlptrs)]
+
 %macro EXIT 0
 	call	[Quit]
 	xor	eax,eax
@@ -45,51 +47,53 @@ _start:
 	dec	ebp
 	jz	.loadloop
 
+	mov	ebp,sdlptrs
+
 	push	2	; SDL_OPENGL
 	push	0
 	push	600
 	push	800
-	call	[SetVideoMode]
+	call	F(SetVideoMode)
 	xor	ebx,ebx
 	push	ebx ; 0
-	call	[ShowCursor]
+	call	F(ShowCursor)
 	push	aspec
-	call	[OpenAudio]
+	call	F(OpenAudio)
 	push	ebx ; 0
-	call	[PauseAudio]
+	call	F(PauseAudio)
 
 	push	8b30h ; GL_FRAGMENT_SHADER
-	call	[CreateShader]
+	call	F(CreateShader)
 	push	ebx ; 0
 	push	fshaderptr
 	push	1
 	push	eax
 	mov	ebx,eax
-	call	[ShaderSource]
-	call	[CompileShader]
-	call	[CreateProgram]
+	call	F(ShaderSource)
+	call	F(CompileShader)
+	call	F(CreateProgram)
 	; nvidia glCompileShader overwrites shader param
 	push	ebx
 	push	eax
-	call	[AttachShader]
-	call	[LinkProgram]
-	call	[UseProgram]
+	call	F(AttachShader)
+	call	F(LinkProgram)
+	call	F(UseProgram)
 
 	; main loop
 introloop:
-	call	[GetTicks]
+	call	F(GetTicks)
 	push	eax
-	call	[Color]
+	call	F(Color)
 
 	push	-1
 	push	-1
 	push	1
 	push	1
-	call	[Recti]
-	call	[SwapBuffers]
+	call	F(Recti)
+	call	F(SwapBuffers)
 
 	push	event
-	call	[PollEvent]
+	call	F(PollEvent)
 
 ;	add	esp,4+4*4+4
 	times	6	pop	eax
