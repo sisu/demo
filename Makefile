@@ -1,6 +1,4 @@
-#AOBJ=load.o draw.o
-#COBJ=synth.o
-AOBJ=load.o draw.o synth.o
+AOBJ=load.o synth.o
 COBJ=
 OBJ=$(AOBJ) $(COBJ)
 #OBJ=$(AOBJ)

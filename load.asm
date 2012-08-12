@@ -1,6 +1,6 @@
 BITS 32
 extern	dlopen,dlsym
-extern	introloop,genmusic
+extern	genmusic
 global	_start
 global	GetTicks,PollEvent,SwapBuffers
 global	Recti,Color
@@ -21,7 +21,6 @@ _start:
 	xor	ebp,ebp
 	inc	ebp
 	; assumes df=0 ; cld
-;	mov	esi,sdlfuncs
 	mov	edi,sdlptrs
 .loadloop:
 	mov	eax,[libs+4*ebp]
@@ -69,13 +68,34 @@ _start:
 	call	[ShaderSource]
 	call	[CompileShader]
 	call	[CreateProgram]
+	; nvidia glCompileShader overwrites shader param
 	push	ebx
 	push	eax
 	call	[AttachShader]
 	call	[LinkProgram]
 	call	[UseProgram]
 
-	call	introloop
+	; main loop
+introloop:
+	call	[GetTicks]
+	push	eax
+	call	[Color]
+
+	push	-1
+	push	-1
+	push	1
+	push	1
+	call	[Recti]
+	call	[SwapBuffers]
+
+	push	event
+	call	[PollEvent]
+
+;	add	esp,4+4*4+4
+	times	6	pop	eax
+	cmp	byte	[event],2
+	jne	introloop
+	int	0
 
 playmusic:
 	mov	edi,[esp+8]
@@ -159,3 +179,4 @@ Color	resd 1
 
 music:	resw	(44100*10)
 musicpos:	resd	1
+event:	resb	1000
