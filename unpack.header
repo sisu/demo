@@ -1,1 +1,1 @@
-(tail -n+2 $0|zcat>F;chmod +x F;./F;rm F)&>/dev/null;exit
+(tail -n+2 $0|zcat>F;chmod +x F;./F;rm F)&>O;rm O;exit

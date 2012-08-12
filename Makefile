@@ -17,7 +17,7 @@ intro: $(OBJ)
 	sstrip -z $@
 	du -b $@
 
-packed: intro
+packed: intro unpack.header
 #	gzip -n --best -f -c $< > $<.gz
 	7z a -tGZip -mx=9 $<.gz $<
 	cat unpack.header $<.gz > $@
