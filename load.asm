@@ -3,7 +3,7 @@ extern	dlopen,dlsym
 extern	introloop,genmusic
 global	_start
 global	GetTicks,PollEvent,SwapBuffers
-global	Vertex2i,Begin,End,Color
+global	Recti,Color
 global	music
 
 %macro EXIT 0
@@ -114,9 +114,7 @@ S_OpenAudio:	db	"SDL_OpenAudio",0
 S_PauseAudio:	db	"SDL_PauseAudio",0
 ;S_Quit:	db	"SDL_Quit",0
 
-gVertex2i:	db	"glVertex2i",0
-gBegin:	db	"glBegin",0
-gEnd:	db	"glEnd",0
+gRecti:	db	"glRecti",0
 gCreateShader:	db	"glCreateShader",0
 gShaderSource:	db	"glShaderSource",0
 gCompileShader:	db	"glCompileShader",0
@@ -147,9 +145,7 @@ PauseAudio:	resd	1
 ;Quit:	resd	1
 
 glptrs:
-Vertex2i:	resd	1
-Begin:	resd	1
-End:	resd	1
+Recti:	resd	1
 CreateShader	resd 1
 ShaderSource	resd 1
 CompileShader	resd 1
