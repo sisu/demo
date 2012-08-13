@@ -18,8 +18,29 @@ global	music
 
 section .text
 _start:
-	call	genmusic
+; generate music
+	mov	edi,music
+	xor	ecx,ecx
+.genloop:
+	mov	eax,ecx
+	sar	eax,12
+	mov	edx,ecx
+	sar	edx,8
+	or	eax,edx
+	mov	edx,ecx
+	sar	edx,4
+	and	eax,edx
+	and	eax,63
+	imul	eax,ecx
+	sal	eax,8
 
+	stosw
+	inc	ecx
+	cmp	ecx,MS
+	jl	.genloop
+
+
+; load sdl and opengl
 	xor	ebp,ebp
 	inc	ebp
 	; assumes df=0 ; cld
@@ -47,8 +68,11 @@ _start:
 	dec	ebp
 	jz	.loadloop
 
+	; for smaller addressing
 	mov	ebp,sdlptrs
 
+
+; initialize opengl
 	push	2	; SDL_OPENGL
 	push	0
 	push	600
@@ -181,6 +205,8 @@ Color	resd 1
 ;GetError:	resd 1
 
 
-music:	resw	(44100*10)
+MS	equ	44100*10
+music:	resw	MS
 musicpos:	resd	1
+
 event:	resb	1000

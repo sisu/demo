@@ -64,13 +64,46 @@ dynamic_size	equ	$ - dynamic
 
 symtab:
 	dd	0,0
+	dd	0
+	dw	0,0
+	dd	dlopen_name,0,0
+	dw	0x12,0
+	dd	dlsym_name,0,0
+	dw	0x12,0
+symtab_size	equ	$ - symtab
 
-interp:
+hash:	dd	1,3,0,0,0,0
+
+reltext:
+	dd	dlopen
+	db	1,1,0,0
+	dd	dlsym
+	db	1,2,0,0
+reltext_size	equ	$ - reltext
 
 _start:
 	xor	eax,eax
 	inc	eax
 	int	128
 
+
+interp:	db	'/lib/ld-linux.so.2',0
+interp_size	equ	$ - interp
+
+strtab:
+	libdl_name	equ	$ - strtab
+	db	'libdl.so.2',0
+	dlopen_name	equ	$ - strtab
+	db	'dlopen',0
+	dlsym_name	equ	$ - strtab
+	db	'dlsym',0
+strtab_size	equ	$ - strtab
+
 filesize	equ	$ - $$
 memsize	equ	$ - $$
+
+
+ABSOLUTE $
+
+dlopen	resd	1
+dlsym	resd	1
