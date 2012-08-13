@@ -15,9 +15,9 @@ ehdr:
 	dw	ehdrsize ; e_ehsize
 	dw	phdrsize ; e_phentsize
 	dw	3 ; e_phnum
-	dw	0 ; e_shentsize
-	dw	0 ; e_shnum
-	dw	0 ; e_shstrndx
+;	dw	0 ; e_shentsize
+;	dw	0 ; e_shnum
+;	dw	0 ; e_shstrndx
 
 ehdrsize	equ	$ - ehdr
 
@@ -48,6 +48,7 @@ phdr: ; Elf32_Phdr
 	dd	interp_size
 	dd	interp_size
 	dd	4
+;	dd	1
 
 dynamic:
 	dd	1,libdl_name
@@ -59,7 +60,7 @@ dynamic:
 	dd	17,reltext
 	dd	18,reltext_size
 	dd	19,8
-	dd	0,0
+;	dd	0,0
 dynamic_size	equ	$ - dynamic
 
 symtab:
@@ -81,12 +82,6 @@ reltext:
 	db	1,2,0,0
 reltext_size	equ	$ - reltext
 
-_start:
-	xor	eax,eax
-	inc	eax
-	int	128
-
-
 interp:	db	'/lib/ld-linux.so.2',0
 interp_size	equ	$ - interp
 
@@ -99,11 +94,21 @@ strtab:
 	db	'dlsym',0
 strtab_size	equ	$ - strtab
 
-filesize	equ	$ - $$
-memsize	equ	$ - $$
 
+_start:
+;	push	1
+;	push	0
+;	call	[dlopen]
+	xor	eax,eax
+	inc	eax
+	int	128
+
+
+filesize	equ	$ - $$
 
 ABSOLUTE $
 
 dlopen	resd	1
 dlsym	resd	1
+
+memsize	equ	$ - $$

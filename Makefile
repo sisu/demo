@@ -7,15 +7,16 @@ CFLAGS=-Wall -m32 -O1 -fomit-frame-pointer -ffast-math
 
 all: packed
 
-intro: $(OBJ)
-#	gcc $(OBJ) -o $@ -nostdlib -s $(CFLAGS) -ldl -fwhole-program -fuse-linker-plugin
-#	ld $(OBJ) -o $@ -ldl --oformat=elf32-i386
-#	ld $(OBJ) -o $@ -ldl -melf_i386 -s
-#	ld $(OBJ) -o $@ -dynamic-linker /lib/ld-linux.so.2 /usr/lib32/libSDL.so /usr/lib32/libGL.so -melf_i386 -s
-	ld $(OBJ) -o $@ -dynamic-linker /lib/ld-linux.so.2 /usr/lib32/libdl.so -melf_i386 -s
-	strip -s -R .comment -R .gnu.version $@
-	sstrip -z $@
+intro: intro.asm
+	nasm -f bin $< -o $@
+	chmod +x $@
 	du -b $@
+
+#intro: $(OBJ)
+#	ld $(OBJ) -o $@ -dynamic-linker /lib/ld-linux.so.2 /usr/lib32/libdl.so -melf_i386 -s
+#	strip -s -R .comment -R .gnu.version $@
+#	sstrip -z $@
+#	du -b $@
 
 packed: intro unpack.header
 #	gzip -n --best -f -c $< > $<.gz
