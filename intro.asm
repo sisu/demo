@@ -19,7 +19,7 @@ ehdr:
 ;	dw	0 ; e_shnum
 ;	dw	0 ; e_shstrndx
 
-ehdrsize	equ	$ - ehdr
+ehdrsize	equ	$ - ehdr + 6
 
 phdr: ; Elf32_Phdr
 	dd	1 ; p_type = PT_LOAD
@@ -61,10 +61,10 @@ dynamic:
 	dd	18,reltext_size
 	dd	19,8
 ;	dd	0,0
-dynamic_size	equ	$ - dynamic
 
 symtab:
 	dd	0,0
+dynamic_size	equ	$ - dynamic
 	dd	0
 	dw	0,0
 	dd	dlopen_name,0,0
