@@ -52,7 +52,7 @@ phdr: ; Elf32_Phdr
 
 dynamic:
 	dd	1,libdl_name
-	dd	4,hash
+;	dd	4,hash
 	dd	5,strtab
 	dd	6,symtab
 	dd	10,strtab_size
@@ -73,7 +73,7 @@ dynamic_size	equ	$ - dynamic
 	dw	0x12,0
 symtab_size	equ	$ - symtab
 
-hash:	dd	1,3,0,0,0,0
+;hash:	dd	1,3,0,0,0,0
 
 reltext:
 	dd	dlopen
