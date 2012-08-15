@@ -7,7 +7,7 @@ CFLAGS=-Wall -m32 -O1 -fomit-frame-pointer -ffast-math
 
 all: packed
 
-intro: intro.asm
+intro: intro.asm t.frag.small
 	nasm -f bin $< -o $@
 	chmod +x $@
 	du -b $@
