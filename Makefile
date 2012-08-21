@@ -5,7 +5,7 @@ OBJ=$(AOBJ) $(COBJ)
 #CFLAGS=-Wall -m32 -Os -fomit-frame-pointer -flto -ffast-math
 CFLAGS=-Wall -m32 -O1 -fomit-frame-pointer -ffast-math
 
-all: packed
+all: packed editor
 
 intro: intro.asm t.frag.small
 	nasm -f bin $< -o $@
@@ -39,3 +39,6 @@ t.frag.small: t.frag cshader
 
 cshader: %: %.cpp
 	g++ $< -o $@ -Wall -O2
+
+editor: %: %.cpp
+	g++ $< -o $@ `sdl-config --cflags --libs` -lGL -Wall -O2
