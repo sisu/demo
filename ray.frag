@@ -7,13 +7,15 @@ void main() {
 	float t = 300.*gl_Color.r;
 	vec2 f = gl_FragCoord.xy/vec2(800,600)-vec2(.5,.5);
 
-	mat3 B = mat3(.4,.5,.6, -1.,.5,.3, .3,-.4,-.6);
+	vec3 B[9];
+	for(int i=0; i<9; ++i) B[i]=vec3(sin(i),sin(1+i),-sin(2+i));
+//	mat3 B = mat3(.4,.5,.6, -1.,.5,.3, .3,-.4,-.6);
 	vec3 d = vec3(sin(1.2*t),sin(t),5), v = vec3(f,1.), cur=vec3(0,0,0);
 	float phit=90;
 	for(float part=.9; part>.5; part*=.7) {
 		vec3 pt,dir;
-		for(int i=0; i<3; ++i) {
-			d=2*sin(t*B[i])-cur;
+		for(int i=0; i<9; ++i) {
+			d=2*sin(.4*t*B[i])-cur;
 			d.z+=9.;
 			float hit = T(d,v);
 			if (hit<phit&&hit>0) {
