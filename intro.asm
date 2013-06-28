@@ -214,9 +214,11 @@ introloop:
 playmusic:
 	mov	edi,[esp+8]
 	mov	ecx,[esp+12]
-	mov	esi,music
-	add	esi,[musicpos]
-	add	[musicpos],ecx
+	mov	esi, musicpos
+	add	[esi], ecx
+	lodsd
+	sub	eax, ecx
+	add	esi, eax
 	rep	movsb
 ;introloop:
 ;genmusic:
@@ -298,8 +300,8 @@ Color	resd 1
 
 
 MS	equ	44100*10
-music:	resw	MS
 musicpos:	resd	1
+music:	resw	MS
 
 event:	resb	1000
 

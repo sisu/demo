@@ -1,5 +1,6 @@
 #include "SDL.h"
 #include <GL/gl.h>
+#include <GL/glu.h>
 #include <iostream>
 #include <cassert>
 #include <string>
@@ -87,6 +88,10 @@ int main(int argc, char* argv[]) {
 		int t = SDL_GetTicks()-startT;
 		glColor3us(t,0,0);
 		glRecti(-1,-1,1,1);
+		int err = glGetError();
+		if (err) {
+			fprintf(stderr, "GL error: %s\n", gluErrorString(err));
+		}
 		SDL_GL_SwapBuffers();
 		SDL_Delay(20);
 

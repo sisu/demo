@@ -41,4 +41,4 @@ cshader: %: %.cpp
 	g++ $< -o $@ -Wall -O2
 
 editor: %: %.cpp
-	g++ $< -o $@ `sdl-config --cflags --libs` -lGL -Wall -O2
+	g++ $< -o $@ `sdl-config --cflags --libs` -lGL -lGLU -Wall -O2

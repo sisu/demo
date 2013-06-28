@@ -1,11 +1,13 @@
 #include "SDL.h"
 #include <math.h>
+#include <string.h>
 
 #define FREQ 44100
 #define SAMPLES 256
 
-#define TIME .42f
-#define STIME .07f
+// in msec
+#define NOTE_TIME 420
+#define SILENCE_TIME 70
 
 typedef struct {
 	int sfreq;
@@ -14,13 +16,39 @@ typedef struct {
 	int stime;
 } instr;
 instr instrs[] =  {
-	{105000, 12, 180, FREQ*0.37},
+//	{10500, 12, 180, FREQ*0.07},
+	{800, 0, 180, FREQ*0.07},
+//	{105000000, 5, 180, FREQ*0.07},
 };
+unsigned char notes[] = { 10,11,12,10,6,8,12,10 };
 
-int place=0;
-void callback(void* udata, Uint8* s, int len)
-{
-	(void)udata,(void)len;
+#define TOTAL_TIME (4*NOTE_TIME)
+#define MSIZE (FREQ*TOTAL_TIME/1000)
+#define NSMP (int)(FREQ*NOTE_TIME/1000)
+#define SSMP (int)(FREQ*SILENCE_TIME/1000)
+
+Sint16 music[MSIZE+1024];
+void genMusic() {
+	int i,j;
+	int icnt = sizeof(instrs)/sizeof(instrs[0]);
+	for(j=0; j<icnt; ++j) {
+		instr in = instrs[j];
+		const int B = 20;
+		int limit = NSMP - SSMP, silence = (1<<B)/SSMP;
+		for(i=0; i<MSIZE; ++i) {
+			int nnum = i/NSMP;
+			int npos = i%NSMP;
+			int note = notes[nnum];
+//			if (npos==0) printf("%d\n", note);
+			int bfreq = in.sfreq * note;
+			int a = ((int)(bfreq*npos/(10000+npos*in.slowdown)) & 127) * in.volume;
+			if (npos>limit) {
+				a = (a*((1<<B)-silence*(npos-limit)))>>B;
+			}
+			music[i] += a;
+		}
+	}
+#if 0
 	Uint16* stream = (Uint16*)s; len/=2;
 
 	instr ins = instrs[0];
@@ -45,12 +73,21 @@ void callback(void* udata, Uint8* s, int len)
 		int a = ((int)(sfreq*k/(10000+k*slowdown)) & 127) * volume;
 		if (k > limit) {
 //			stream[i] /= 1+silence*(k-limit);
-			a = (a*((1<<20)-silence*(k-limit)))>>20;
-//			a=0;
+			a *= ((1<<20)-silence*(k-limit))>>20;
 		}
 		stream[i] = a;
 	}
 	place += len;
+#endif
+}
+
+int place=0;
+void callback(void* udata, Uint8* s, int len)
+{
+	if (place>=2*MSIZE) place=0,printf("reset\n");
+	memcpy(s,music+place/2,len);
+	place += len;
+	(void)udata;
 }
 
 SDL_AudioSpec spec = {
@@ -67,17 +104,12 @@ SDL_AudioSpec spec = {
 
 int main()
 {
+	genMusic();
 	SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	SDL_OpenAudio(&spec, 0);
 	SDL_PauseAudio(0);
 
-	int i;
-	for(i=0; i<8; ++i) {
-		SDL_LockAudio();
-		place = 0;
-		SDL_UnlockAudio();
-		SDL_Delay(TIME*1000);
-	}
+	SDL_Delay(TOTAL_TIME);
 	SDL_Quit();
 	return 0;
 }
