@@ -12,6 +12,7 @@ void main() {
 //	mat3 B = mat3(.4,.5,.6, -1.,.5,.3, .3,-.4,-.6);
 	vec3 d = vec3(sin(1.2*t),sin(t),5), v = vec3(f,1.), cur=vec3(0,0,0);
 	float phit=90;
+	gl_FragColor=0;
 	for(float part=.9; part>.5; part*=.7) {
 		vec3 pt,dir;
 		for(int i=0; i<9; ++i) {
@@ -21,10 +22,11 @@ void main() {
 			if (hit<phit&&hit>0) {
 				phit=hit;
 				pt = hit*v;
-				dir = (pt-d);
+				dir = normalize(pt-d);
 				vec3 light = normalize(vec3(1.,1.,-1.));
+				gl_FragColor = pow(max(dot(v, reflect(light, dir)),0),2);
 //				gl_FragColor.rgb = vec3(abs(dot(light,dir)), abs(sin(hit)), length(pt-d));
-				gl_FragColor.r = dot(light,dir);
+				gl_FragColor.r += dot(light,dir);
 			}
 		}
 		v = reflect(v, dir);
