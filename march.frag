@@ -28,16 +28,15 @@ void main() {
 
 	gl_FragColor=0;
 
-	float x=0,y,l,o,e=1e-3;
-	vec3 v = vec3(f,1.), c, d, L, g, h=vec3(e,0,0);
+	float y,l,o,e=1e-3;
+	vec3 v = vec3(f,1.), c=0, d, L, g, h=vec3(e,0,0);
 
 	for(int i=0; i<50; ++i) {
-		c = x*v;
 		y = F(c);
 //		if (y>-0.01) break;
-		g = (vec3(F(c+h), F(c+h.yxz), F(c+h.yzx))-y)/e;
-		float d = abs(y)/length(g);
-		x += min(0.2*d,1);
+		g = vec3(F(c+h), F(c+h.yxz), F(c+h.yzx))-y;
+		float d = e*abs(y)/length(g);
+		c += min(0.2*d,1)*v;
 	}
 	/*
 	for(int t=0; t<50; ++t) {
