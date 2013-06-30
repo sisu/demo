@@ -30,22 +30,22 @@ void main() {
 	for(int t=0; t<50; ++t) {
 		vec3 c = x*v;
 		float y = F(c);
-		if (y>-0.01) break;
+//		if (y>-0.01) break;
 		float d = abs(y)/length(dF(c,y));
 		x += min(0.2*d,1);
 	}
+	/*
 	for(int t=0; t<50; ++t) {
 		float y = F(x*v);
 		float nx = x - y / dot(dF(x*v, y),v);
 		x = min(x+0.5, nx);
-//		if (nx>100) break;
-//		x = x - y / dot(dF(x*v, y),v);
 	}
+	/**/
 //	gl_FragColor=0;
 //	gl_FragColor.g = F(x*v)+1;
 //	gl_FragColor.g = x/20;
 	float y = F(x*v);
-	if (y>-1e-3) {
+	if (y>-1e-1) {
 		vec3 d = -normalize(dF(x*v, y));
 		vec3 light = normalize(vec3(sin(t),sin(1.1*t),-1));
 		float l = dot(d,light);
