@@ -5,6 +5,8 @@ float F(vec3 v) {
 	for(int i=0; i<9; ++i) {
 		vec3 d=2.*sin(.4*t*B[i])-v;
 		d.z+=9.;
+		d.x += 0.04*sin(10*v.y);
+		d.y += 0.04*sin(10*v.z+t+v.x);
 		r += 1/length(d);
 	}
 	return r-4;
@@ -23,7 +25,15 @@ void main() {
 
 	gl_FragColor=0;
 
-	float x=1;
+	float x=0;
+
+	for(int t=0; t<50; ++t) {
+		vec3 c = x*v;
+		float y = F(c);
+		if (y>-0.01) break;
+		float d = abs(y)/length(dF(c,y));
+		x += min(0.2*d,1);
+	}
 	for(int t=0; t<50; ++t) {
 		float y = F(x*v);
 		float nx = x - y / dot(dF(x*v, y),v);
@@ -31,28 +41,9 @@ void main() {
 //		if (nx>100) break;
 //		x = x - y / dot(dF(x*v, y),v);
 	}
-
-	/*
-	for(int t=0; t<50; ++t) {
-		float x=F(cur);
-		if (x>0) {
-			vec3 d = normalize(dF(cur, x));
-			vec3 light = normalize(vec3(sin(t),1,-1));
-			float l = dot(d,light);
-			gl_FragColor = pow(max(dot(v, reflect(light, d)),0),2);
-//				dot(2*l*d - light,f);
-			gl_FragColor.r+=l;
-			break;
-		}
-//		cur+=.2*v;
-		float dist = -x/length(dF(cur,x));
-//		cur += (.1-x)*v;
-		cur += min(1.,.1+dist)*v;
-	}
-	*/
 //	gl_FragColor=0;
-	gl_FragColor.g = F(x*v)+1;
-	gl_FragColor.g = x/20;
+//	gl_FragColor.g = F(x*v)+1;
+//	gl_FragColor.g = x/20;
 	float y = F(x*v);
 	if (y>-1e-3) {
 		vec3 d = -normalize(dF(x*v, y));
