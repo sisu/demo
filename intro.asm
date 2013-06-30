@@ -136,14 +136,18 @@ _start:
 
 	push	2	; RTLD_NOW
 	push	eax
-	call	[dlopen]
+dlopen	equ	$+1
+	call	0
+;	call	[dlopen]
 	push	eax
 
 	mov	esi,f0
 .symloop:
 	mov	[esp+4],esi
 	inc	esi
-	call	[dlsym]
+dlsym	equ	$+1
+	call	0
+;	call	[dlsym]
 	test	eax,eax
 	jz	.notfound
 	stosd
@@ -273,8 +277,8 @@ filesize	equ	$ - $$
 ; section .bss
 ABSOLUTE $
 
-dlopen	resd	1
-dlsym	resd	1
+;dlopen	resd	1
+;dlsym	resd	1
 
 sdlptrs:
 SetVideoMode:	resd	1

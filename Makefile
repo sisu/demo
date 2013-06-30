@@ -34,7 +34,8 @@ load.o:	t.frag.small
 $(COBJ): %.o: %.c load.h
 	gcc $< -c -o $@ $(CFLAGS) `sdl-config --cflags`
 
-t.frag.small: t.frag cshader
+#t.frag.small: t.frag cshader
+t.frag.small: march.frag cshader
 	./cshader < $< > $@
 
 cshader: %: %.cpp
@@ -42,3 +43,6 @@ cshader: %: %.cpp
 
 editor: %: %.cpp
 	g++ $< -o $@ `sdl-config --cflags --libs` -lGL -lGLU -Wall -O2
+
+clean:
+	rm -f packed editor intro t.frag.small cshader
