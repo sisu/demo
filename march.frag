@@ -28,10 +28,10 @@ void main() {
 
 	gl_FragColor=0;
 
-	float x=0,y,t=50,l,o,e=1e-3;
+	float x=0,y,l,o,e=1e-3;
 	vec3 v = vec3(f,1.), c, d, L, g, h=vec3(e,0,0);
 
-	while(t--) {
+	for(int i=0; i<50; ++i) {
 		c = x*v;
 		y = F(c);
 //		if (y>-0.01) break;
