@@ -160,7 +160,7 @@ dlsym	equ	$+1
 	push	600
 	push	800
 	call	F(SetVideoMode)
-;	mov	ebx, eax
+	mov	ebx, eax
 	push	0 ; 0
 	call	F(ShowCursor)
 	push	aspec
@@ -169,8 +169,28 @@ dlsym	equ	$+1
 	call	F(PauseAudio)
 
 	; main loop
-introloop:
+.introloop:
 	call	F(GetTicks)
+	mov	esi, eax
+	mov	ecx, 600
+	.drawloop:
+		mov	edi, [ebx+20]
+		xor	eax,eax
+		mov	ax, [ebx+16]
+		mov	edx, ecx
+		dec	edx
+		imul	eax, edx
+		add	edi, eax
+
+		mov	edx,800
+		.innerdraw:
+			mov	eax, ecx
+			add	eax, esi
+			xor	eax, edx
+			stosd
+			dec	edx
+			jnz	.innerdraw
+		loop	.drawloop
 	push	ebx
 	call	F(Flip)
 
@@ -180,7 +200,7 @@ introloop:
 ;	add	esp,4+4*4+4
 	times	2	pop	eax
 	cmp	byte	[event],2
-	jne	introloop
+	jne	.introloop
 	int	0
 
 playmusic:
