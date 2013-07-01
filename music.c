@@ -16,8 +16,8 @@ typedef struct {
 	int stime;
 } instr;
 instr instrs[] =  {
-//	{10500, 12, 180, FREQ*0.07},
-	{800, 0, 180, FREQ*0.07},
+	{10500, 12, 180, FREQ*0.07},
+//	{800, 0, 180, FREQ*0.07},
 //	{105000000, 5, 180, FREQ*0.07},
 };
 unsigned char notes[] = { 10,11,12,10,6,8,12,10 };
@@ -35,6 +35,7 @@ void genMusic() {
 		instr in = instrs[j];
 		const int B = 20;
 		int limit = NSMP - SSMP, silence = (1<<B)/SSMP;
+//		int prev=0;
 		for(i=0; i<MSIZE; ++i) {
 			int nnum = i/NSMP;
 			int npos = i%NSMP;
@@ -42,6 +43,9 @@ void genMusic() {
 //			if (npos==0) printf("%d\n", note);
 			int bfreq = in.sfreq * note;
 			int a = ((int)(bfreq*npos/(10000+npos*in.slowdown)) & 127) * in.volume;
+//			a = ((int)(prev/(10000)) & 127) * in.volume;
+//			int add = bfreq-50*npos;
+//			prev += add<0?0:add;
 			if (npos>limit) {
 				a = (a*((1<<B)-silence*(npos-limit)))>>B;
 			}
