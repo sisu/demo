@@ -48,15 +48,15 @@ void main() {
 //	gl_FragColor=0;
 //	gl_FragColor.g = F(x*v)+1;
 //	gl_FragColor.g = x/20;
-	if (y>-.1) {
+//	if (y>-.1) {
 		d = -normalize(g);
 		L = normalize(vec3(sin(t),sin(1.1*t),-1));
-		l = dot(d,L);
+		l = dot(L,d);
 		o = dot(v, reflect(L, d));
 		gl_FragColor = o*o;
 //				dot(2*l*d - light,f);
 		gl_FragColor.x+=l;
-	}
+//	}
 
 //	gl_FragColor.g = F(vec3(0,0,1)*(8+3*f.x));
 }
