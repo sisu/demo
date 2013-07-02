@@ -173,15 +173,9 @@ dlsym	equ	$+1
 	call	F(GetTicks)
 	mov	esi, eax
 	mov	ecx, 600
+	mov	edi, [ebx+20]
 	.drawloop:
-		mov	edi, [ebx+20]
-		xor	eax,eax
-		mov	ax, [ebx+16]
-		mov	edx, ecx
-		dec	edx
-		imul	eax, edx
-		add	edi, eax
-
+		push	edi
 		mov	edx,800
 		.innerdraw:
 			mov	eax, ecx
@@ -190,6 +184,10 @@ dlsym	equ	$+1
 			stosd
 			dec	edx
 			jnz	.innerdraw
+		xor	eax,eax
+		mov	ax, [ebx+16]
+		pop	edi
+		add	edi, eax
 		loop	.drawloop
 	push	ebx
 	call	F(Flip)
