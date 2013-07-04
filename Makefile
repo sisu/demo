@@ -5,9 +5,14 @@ OBJ=$(AOBJ) $(COBJ)
 #CFLAGS=-Wall -m32 -Os -fomit-frame-pointer -flto -ffast-math
 CFLAGS=-Wall -m32 -O1 -fomit-frame-pointer -ffast-math
 
-all: packed editor
+all: packed editor soft-packed
 
-intro: soft.asm t.frag.small
+intro: intro.asm t.frag.small
+	nasm -f bin $< -o $@
+	chmod +x $@
+	du -b $@
+
+soft: soft.asm
 	nasm -f bin $< -o $@
 	chmod +x $@
 	du -b $@
@@ -20,6 +25,13 @@ intro: soft.asm t.frag.small
 
 packed: intro unpack.header
 #	gzip -n --best -f -c $< > $<.gz
+	7z a -tGZip -mx=9 $<.gz $<
+	cat unpack.header $<.gz > $@
+	rm $<.gz
+	chmod a+rx $@
+	du -b $@
+
+soft-packed: soft unpack.header
 	7z a -tGZip -mx=9 $<.gz $<
 	cat unpack.header $<.gz > $@
 	rm $<.gz
