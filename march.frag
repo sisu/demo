@@ -28,7 +28,7 @@ void main() {
 
 	gl_FragColor=0;
 
-	float y,l,o,e=1e-3;
+	float y,o,e=1e-3;
 	vec3 v = vec3(f,1.), c=0, d, L, g, h=vec3(e,0,0);
 
 	for(int i=0; i<50; ++i) {
@@ -51,11 +51,10 @@ void main() {
 //	if (y>-.1) {
 		d = -normalize(g);
 		L = normalize(vec3(sin(t),sin(1.1*t),-1));
-		l = dot(L,d);
 		o = dot(v, reflect(L, d));
 		gl_FragColor = o*o;
 //				dot(2*l*d - light,f);
-		gl_FragColor.x+=l;
+		gl_FragColor.x+=dot(L,d);
 //		gl_FragColor.y += sin(c.x)*sin(c.z+t);
 //	}
 
