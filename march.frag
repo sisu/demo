@@ -15,13 +15,6 @@ float F(vec3 v) {
 	}
 	return r-4;
 }
-/*
-vec3 dF(vec3 v, float x) {
-	float e=1e-3;
-	vec3 h=vec3(e,0.,0.);
-	return (vec3(F(v+h), F(v+h.yxz), F(v+h.yzx))-x)/e;
-}
-*/
 void main() {
 	vec2 f = gl_FragCoord.xy/vec2(800,600)-vec2(.5,.5);
 //	for(int i=0; i<9; ++i) B[i]=vec3(sin(i),sin(1+i),-sin(2+i));
@@ -35,19 +28,8 @@ void main() {
 		y = F(c);
 //		if (y>-0.01) break;
 		g = vec3(F(c+h), F(c+h.yxz), F(c+h.yzx))-y;
-		float d = e*abs(y)/length(g);
-		c += min(0.2*d,1)*v;
+		c += min(0.2*e*abs(y)/length(g),1)*v;
 	}
-	/*
-	for(int t=0; t<50; ++t) {
-		float y = F(x*v);
-		float nx = x - y / dot(dF(x*v, y),v);
-		x = min(x+0.5, nx);
-	}
-	/**/
-//	gl_FragColor=0;
-//	gl_FragColor.g = F(x*v)+1;
-//	gl_FragColor.g = x/20;
 //	if (y>-.1) {
 		d = -normalize(g);
 		L = normalize(vec3(sin(t),sin(1.1*t),-1));
