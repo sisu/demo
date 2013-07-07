@@ -1,11 +1,11 @@
-AOBJ=load.o
+AOBJ=load.o synth.o
 COBJ=
 OBJ=$(AOBJ) $(COBJ)
 #OBJ=$(AOBJ)
 #CFLAGS=-Wall -m32 -Os -fomit-frame-pointer -flto -ffast-math
 CFLAGS=-Wall -m32 -O1 -fomit-frame-pointer -ffast-math
 
-all: packed editor soft-packed
+all: packed editor soft-packed play
 
 intro: intro.asm t.frag.small
 	nasm -f bin $< -o $@
@@ -56,5 +56,8 @@ cshader: %: %.cpp
 editor: %: %.cpp
 	g++ $< -o $@ `sdl-config --cflags --libs` -lGL -lGLU -Wall -O2
 
+play: synth.o play.c
+	gcc $^ -Wall -O2 -o $@ `sdl-config --cflags` -lSDL -m32
+
 clean:
-	rm -f packed editor intro t.frag.small cshader
+	rm -f packed editor intro t.frag.small cshader $(AOBJ) play
