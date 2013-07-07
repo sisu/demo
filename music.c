@@ -35,7 +35,7 @@ void genMusic() {
 		instr in = instrs[j];
 		const int B = 20;
 		int limit = NSMP - SSMP, silence = (1<<B)/SSMP;
-//		int prev=0;
+//		int prev=0, add=in.sfreq;
 		for(i=0; i<MSIZE; ++i) {
 			int nnum = i/NSMP;
 			int npos = i%NSMP;
@@ -44,7 +44,9 @@ void genMusic() {
 			int bfreq = in.sfreq * note;
 			int a = ((int)(bfreq*npos/(10000+npos*in.slowdown)) & 127) * in.volume;
 //			a = ((int)(prev/(10000)) & 127) * in.volume;
-//			int add = bfreq-50*npos;
+//			int add = bfreq-40*npos;
+//			if (npos==0) add=in.sfreq;
+//			add = add*1999/2000;
 //			prev += add<0?0:add;
 			if (npos>limit) {
 				a = (a*((1<<B)-silence*(npos-limit)))>>B;
