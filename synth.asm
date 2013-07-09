@@ -4,8 +4,13 @@ extern	music
 global	genmusic, genmusic2, genmusic3
 K	equ	44100/4
 
-notes:	db	50,60,40,45,30,50
-ncount	equ	$ - notes
+; instrument: (freq-scale, time, volume, slowdown)
+; (time, slowdown)
+;instrs:	db	11, 2, 15, 
+;instrs:	db	2, 13
+
+notes:	db	8,13,  50,60,40,45,30,50
+ncount	equ	$ - notes - 2
 N	equ	ncount*K
 
 genmusic3:
@@ -13,32 +18,42 @@ genmusic3:
 	mov	edi, music
 	mov	esi, notes
 	mov	ecx, ncount
-.outer:
+
+.instrs:
+	xor	eax,eax
 	lodsb
-	xor	ebx, ebx
-	mov	bl, al
+	mov	[instrtime], eax
+	lodsb
+	mov	[instrslow], eax
+;	mov	[curinstr], ax
+
+.notes:
+	xor	eax, eax
+	lodsb
+	mov	ebx, eax
 ;	imul	bx, 100
 	shl	ebx, 11
 	push	ecx
 	mov	ecx, K
-	mov	ebp, 1<<15
+	mov	ebp, [instrtime]
+	imul	ebp, ecx
+;	mov	ebp, 1<<15
+;	xor	edx, edx
+	xor	eax, eax
 	xor	edx, edx
-	.inner:
-		; ebx: freq, ecx: pos, edx: wave, ebp: vol
-		add	edx, ebx
-		sub	ebp, (1<<15)/K
+	.samples:
+		; eax: wave, ebx: freq, ecx: pos, ebp: vol
+		add	eax, ebx
+		sub	ebp, [instrtime]
 
+		pushad
 ;		xor	eax, eax
-		push	edx
-		push	ebx
-		xor	eax, eax
-		xchg	eax, edx
+;		cdq
+		xor	edx, edx
 		mov	ebx, eax
 		shr	ebx, 13
 		add	ebx, 10<<10
 		div	ebx
-		pop	ebx
-		pop	edx
 ;		shl	eax, 8
 		and	eax, 127
 		imul	eax, 180
@@ -48,10 +63,13 @@ genmusic3:
 		shr	eax, 16
 ;		sub	ebp, 1
 
-		stosw
-		loop	.inner
+;		stosw
+		add	[edi], ax
+		popad
+		times	2	inc	edi
+		loop	.samples
 	pop	ecx
-	loop	.outer
+	loop	.notes
 	popad
 	ret
 
@@ -90,3 +108,8 @@ genmusic:
 	cmp	ecx,N
 	jl	.genloop
 	ret
+
+section .bss
+curinstr:
+	instrtime:	resd	1
+	instrslow:	resd	1
