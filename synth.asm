@@ -4,13 +4,10 @@ extern	music
 global	genmusic, genmusic2, genmusic3
 K	equ	44100/4
 
-; instrument: (freq-scale, time, volume, slowdown)
-; (time, slowdown)
-;instrs:	db	11, 2, 15, 
-;instrs:	db	2, 13
+; instrument: silence, slowdown, notelen, basefreq
 
 notes:	db	2,13,14,11,  1,1,1,1,1,1,0
-	db	4,31,13,7,  50,60,40,45,30,50,40,60,30,70,40,80,-1
+	db	4,31,13,6,  50,60,40,45,30,50,40,60,30,70,40,80,-1
 
 ncount	equ	$ - notes - 4
 N	equ	ncount*K
@@ -43,7 +40,7 @@ genmusic3:
 	mov	ecx, eax
 ;	mov	ecx, K
 	cdq
-	mov	dl, [instrtime]
+	mov	dl, [silence]
 	mov	ebp, edx
 	imul	ebp, ecx
 ;	mov	ebp, 1<<15
@@ -53,7 +50,7 @@ genmusic3:
 		; eax: wave, ebx: freq, ecx: pos, ebp: vol
 		add	eax, ebx
 		cdq
-		mov	dl, [instrtime]
+		mov	dl, [silence]
 		sub	ebp, edx
 
 		pushad
@@ -61,7 +58,7 @@ genmusic3:
 ;		cdq
 		xor	edx, edx
 		mov	ebx, eax
-		mov	cl, [instrslow]
+		mov	cl, [slowdown]
 		shr	ebx, cl
 ;		shr	ebx, 13
 		add	ebx, 10<<10
@@ -126,7 +123,7 @@ genmusic:
 
 section .bss
 curinstr:
-	instrtime:	resb	1
-	instrslow:	resb	1
+	silence:	resb	1
+	slowdown:	resb	1
 	notelen:	resb	1
 	basefreq:	resb	1
