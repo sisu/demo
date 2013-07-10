@@ -9,50 +9,63 @@ K	equ	44100/4
 ;instrs:	db	11, 2, 15, 
 ;instrs:	db	2, 13
 
-notes:	db	8,13,  50,60,40,45,30,50
-ncount	equ	$ - notes - 2
+notes:	db	2,13,14,11,  1,1,1,1,1,1,0
+	db	4,31,13,7,  50,60,40,45,30,50,40,60,30,70,40,80,-1
+
+ncount	equ	$ - notes - 4
 N	equ	ncount*K
 
 genmusic3:
 	pushad
-	mov	edi, music
 	mov	esi, notes
-	mov	ecx, ncount
+;	mov	ecx, ncount
 
-.instrs:
-	xor	eax,eax
-	lodsb
-	mov	[instrtime], eax
-	lodsb
-	mov	[instrslow], eax
-;	mov	[curinstr], ax
+.instrloop:
+	mov	edi, music
+	lodsd
+	mov	[curinstr], eax
 
 .notes:
 	xor	eax, eax
 	lodsb
+	test	al,al
+	jz	.instrloop
+	jl	.endgen
 	mov	ebx, eax
 ;	imul	bx, 100
-	shl	ebx, 11
-	push	ecx
-	mov	ecx, K
-	mov	ebp, [instrtime]
+;	push	ecx
+	mov	cl, [basefreq]
+	shl	ebx, cl
+	xor	eax, eax
+	inc	eax
+	mov	cl, [notelen]
+	shl	eax, cl
+	mov	ecx, eax
+;	mov	ecx, K
+	cdq
+	mov	dl, [instrtime]
+	mov	ebp, edx
 	imul	ebp, ecx
 ;	mov	ebp, 1<<15
 ;	xor	edx, edx
 	xor	eax, eax
-	xor	edx, edx
 	.samples:
 		; eax: wave, ebx: freq, ecx: pos, ebp: vol
 		add	eax, ebx
-		sub	ebp, [instrtime]
+		cdq
+		mov	dl, [instrtime]
+		sub	ebp, edx
 
 		pushad
 ;		xor	eax, eax
 ;		cdq
 		xor	edx, edx
 		mov	ebx, eax
-		shr	ebx, 13
+		mov	cl, [instrslow]
+		shr	ebx, cl
+;		shr	ebx, 13
 		add	ebx, 10<<10
+;		mov	ebx, 10<<10
 		div	ebx
 ;		shl	eax, 8
 		and	eax, 127
@@ -68,8 +81,10 @@ genmusic3:
 		popad
 		times	2	inc	edi
 		loop	.samples
-	pop	ecx
-	loop	.notes
+	jmp	.notes
+;	pop	ecx
+;	loop	.notes
+.endgen:
 	popad
 	ret
 
@@ -111,5 +126,7 @@ genmusic:
 
 section .bss
 curinstr:
-	instrtime:	resd	1
-	instrslow:	resd	1
+	instrtime:	resb	1
+	instrslow:	resb	1
+	notelen:	resb	1
+	basefreq:	resb	1
