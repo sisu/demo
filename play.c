@@ -6,6 +6,7 @@ Sint16 music[150*FREQ];
 void genmusic();
 void genmusic2();
 void genmusic3();
+void genmusic4();
 
 int place=0;
 void callback(void* udata, Uint8* s, int len)
@@ -29,7 +30,7 @@ SDL_AudioSpec spec = {
 
 int main()
 {
-	genmusic3();
+	genmusic4();
 	SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	SDL_OpenAudio(&spec, 0);
 	SDL_PauseAudio(0);

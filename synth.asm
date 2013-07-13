@@ -1,7 +1,7 @@
 BITS 32
 
 extern	music
-global	genmusic, genmusic2, genmusic3
+global	genmusic, genmusic2, genmusic3, genmusic4
 K	equ	44100/4
 
 ; instrument: silence, slowdown, notelen, basefreq
@@ -11,6 +11,56 @@ notes:	db	2,13,14,11,  1,1,1,1,1,1,0
 
 ncount	equ	$ - notes - 4
 N	equ	ncount*K
+
+;asd:	dd	0.05
+asd:	dd	0.105
+aslow:	dw	100
+bslow:	dw	-5
+ampl:	dw	15000
+;snddown:	dd	0.001
+snddown:	dd	0.680272108844
+
+genmusic4:
+	pushad
+	mov	esi, notes
+	mov	edi, music
+
+.notes:
+	xor	eax, eax
+	lodsb
+	test	al,al
+	jle	.endgen
+
+	mov	ecx, 2*K
+;	mov	ebx, eax
+	fild	word [ampl]
+	fldz
+	.samples:
+		fld	dword	[snddown]
+		fsubp	st2, st0
+;		fld1
+		fadd	dword	[asd]
+		fld	st0
+;		fmul	dword	[aslow]
+
+		fidiv	word	[aslow]
+		fld1
+		faddp
+		fdivr	st1
+
+		fsin
+;		fimul	word	[ampl]
+		fmul	st2
+		fadd	dword	[edi]
+		fistp	dword	[edi]
+		times	2	inc	edi
+		loop	.samples
+	fstp	st0
+	fstp	st0
+.endgen:
+	popad
+	ret
+
 
 genmusic3:
 	pushad
@@ -54,17 +104,12 @@ genmusic3:
 		sub	ebp, edx
 
 		pushad
-;		xor	eax, eax
-;		cdq
 		xor	edx, edx
 		mov	ebx, eax
 		mov	cl, [slowdown]
 		shr	ebx, cl
-;		shr	ebx, 13
 		add	ebx, 10<<10
-;		mov	ebx, 10<<10
 		div	ebx
-;		shl	eax, 8
 		and	eax, 127
 		imul	eax, 180
 
