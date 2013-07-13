@@ -6,8 +6,9 @@ K	equ	44100/4
 
 ; instrument: silence, slowdown, notelen, basefreq
 
-notes:	db	2,13,14,11,  1,1,1,1,1,1,0
-	db	4,31,13,6,  50,60,40,45,30,50,40,60,30,70,40,80,-1
+notes:
+	db	3,12,14,11,  1,1,1,1,1,1,0
+	db	4,31,13,3,  50,60,40,45,30,50,40,60,30,70,40,80,-1
 
 ncount	equ	$ - notes - 4
 N	equ	ncount*K
@@ -22,8 +23,9 @@ snddown:	dd	1.36054421769
 
 ; instr: slow count
 
-fnotes:	dd	0,K,  0.06, 0.05, 0.07, 0.04, 0.08, 0.06, 0.05, 0.04, 0
-	dd	0.01,2*K,  0.1, 0.1, 0.1, 0.1, -1
+notetime	equ	4410*2
+fnotes:	dd	0,notetime,  0.06, 0.05, 0.07, 0.04, 0.08, 0.06, 0.05, 0.04, 0
+	dd	0.01,2*notetime,  0.1, 0.1, 0.1, 0.1, -1
 
 genmusic4:
 	pushad
@@ -69,6 +71,10 @@ genmusic4:
 		fdivr	st1
 
 		fsin
+
+		fld	st0
+		fabs
+		fdivp
 
 		fmul	st2
 		fiadd	dword	[edi]
@@ -134,7 +140,7 @@ genmusic3:
 		mov	ebx, eax
 		mov	cl, [slowdown]
 		shr	ebx, cl
-		add	ebx, 10<<10
+		add	ebx, 1<<10
 		div	ebx
 		and	eax, 127
 		imul	eax, 180
