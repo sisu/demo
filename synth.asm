@@ -14,49 +14,75 @@ N	equ	ncount*K
 
 ;asd:	dd	0.05
 asd:	dd	0.105
-aslow:	dw	100
-bslow:	dw	-5
+;aslow:	dw	100
+aslow:	dd	0.00
 ampl:	dw	15000
 ;snddown:	dd	0.001
-snddown:	dd	0.680272108844
+snddown:	dd	1.36054421769
+
+; instr: slow count
+
+fnotes:	dd	0,K,  0.06, 0.05, 0.07, 0.04, 0.08, 0.06, 0.05, 0.04, 0
+	dd	0.01,2*K,  0.1, 0.1, 0.1, 0.1, -1
 
 genmusic4:
 	pushad
-	mov	esi, notes
+	mov	esi, fnotes
+
+.instr:
 	mov	edi, music
-
+	lodsd
+	mov	[fslow], eax
+	lodsd
+	mov	[fcount], eax
 .notes:
-	xor	eax, eax
-	lodsb
-	test	al,al
-	jle	.endgen
+;	xor	eax, eax
+;	lodsb
+;	test	al,al
+;	jle	.endgen
+	lodsd
+	test	eax, eax
+	jl	.endgen
+	jz	.instr
 
-	mov	ecx, 2*K
+	mov	ecx, [fcount]
 ;	mov	ebx, eax
+	fild	dword	[fcount]
+	fld1
+	fdivrp
+;	fld	dword	[snddown]
 	fild	word [ampl]
+	fmul	st1, st0
 	fldz
 	.samples:
-		fld	dword	[snddown]
+		; fpu stack: wave, vol, voldown
+		fld	st2
+;		fld	dword	[snddown]
 		fsubp	st2, st0
-;		fld1
-		fadd	dword	[asd]
-		fld	st0
-;		fmul	dword	[aslow]
 
-		fidiv	word	[aslow]
+		fadd	dword	[esi-4]
+		fld	st0
+		fmul	dword	[fslow]
+
 		fld1
 		faddp
 		fdivr	st1
 
 		fsin
-;		fimul	word	[ampl]
+
 		fmul	st2
-		fadd	dword	[edi]
+		fiadd	dword	[edi]
 		fistp	dword	[edi]
 		times	2	inc	edi
 		loop	.samples
 	fstp	st0
 	fstp	st0
+	fstp	st0
+
+	jmp	.notes
+;	test	eax, eax
+;	jg	.notes
+;	jz	.instr
 .endgen:
 	popad
 	ret
@@ -172,3 +198,6 @@ curinstr:
 	slowdown:	resb	1
 	notelen:	resb	1
 	basefreq:	resb	1
+
+fslow:	resd	1
+fcount:	resd	1
