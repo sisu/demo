@@ -11,18 +11,18 @@ float F(vec3 v) {
 		r += 1/length(d);
 		*/
 //		r += 1/length(2.*sin(.4*t*B[i])-v+vec3(0.04*sin(10*v.y),0.04*sin(10*v.z+t+v.x),9));
-		r += 1/length(2.*sin(.4*t*vec3(sin(i),sin(1+i),sin(2-i)))-v+vec3(0.04*sin(10*v.y),0.04*sin(10*v.z+t+v.x),9));
+		r += 1/length(2*sin(.4*t*vec3(sin(i),sin(1+i),sin(2-i)))-v+vec3(0.04*sin(10*v.y),0.04*sin(10*v.z+t+v.x),9));
 	}
 	return r-4;
 }
 void main() {
-	vec2 f = gl_FragCoord.xy/vec2(800,600)-vec2(.5,.5);
+//	vec2 f = gl_FragCoord.xy/vec2(800,600)-.5;
 //	for(int i=0; i<9; ++i) B[i]=vec3(sin(i),sin(1+i),-sin(2+i));
 
-	gl_FragColor=0;
+//	gl_FragColor=0;
 
 	float y,o,e=1e-3;
-	vec3 v = vec3(f,1.), c=0, d, L, g, h=vec3(e,0,0);
+	vec3 v = vec3(gl_FragCoord.xy/vec2(800,600)-.5,1.), c=0, d, L, g, h=vec3(e,0,0);
 
 	for(int i=0; i<50; ++i) {
 		y = F(c);
