@@ -60,9 +60,14 @@ genmusic4:
 
 		fsin
 
+;		mov	eax, [fslow]
+;		test	eax, eax
+;		jnz	.sinwave
+
 		fld	st0
 		fabs
 		fdivp
+	.sinwave:
 
 		fmul	st2
 		fiadd	dword	[edi]
