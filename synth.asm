@@ -36,10 +36,6 @@ genmusic4:
 ;	lodsb
 ;	test	al,al
 ;	jle	.endgen
-	lodsd
-	test	eax, eax
-	jl	.endgen
-	jz	.instr
 
 	mov	ecx, [fcount]
 ;	mov	ebx, eax
@@ -54,7 +50,7 @@ genmusic4:
 		fld	st2
 		fsubp	st2, st0
 
-		fadd	dword	[esi-4]
+		fadd	dword	[esi]
 		fld	st0
 		fmul	dword	[fslow]
 
@@ -77,7 +73,10 @@ genmusic4:
 	fstp	st0
 	fstp	st0
 
-	jmp	.notes
+	lodsd
+	test	eax, eax
+	jg	.notes
+	jz	.instr
 ;	test	eax, eax
 ;	jg	.notes
 ;	jz	.instr
