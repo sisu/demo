@@ -11,7 +11,7 @@ float F(vec3 v) {
 		r += 1/length(d);
 		*/
 //		r += 1/length(2.*sin(.4*t*B[i])-v+vec3(0.04*sin(10*v.y),0.04*sin(10*v.z+t+v.x),9));
-		r += 1/length(2*sin(.4*t*vec3(sin(i),sin(1+i),sin(2-i)))-v+vec3(0.04*sin(10*v.y),0.04*sin(10*v.z+t+v.x),9));
+		r += 1/length(2*sin(.4*t*sin(vec3(i,1+i,2-i)))-v+vec3(0.04*sin(10*v.y),0.04*sin(10*v.z+t+v.x),9));
 	}
 	return r-4;
 }

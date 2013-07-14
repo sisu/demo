@@ -13,13 +13,7 @@ notes:
 ncount	equ	$ - notes - 4
 N	equ	ncount*K
 
-;asd:	dd	0.05
-asd:	dd	0.105
-;aslow:	dw	100
-aslow:	dd	0.00
 ampl:	dw	15000
-;snddown:	dd	0.001
-snddown:	dd	1.36054421769
 
 ; instr: slow count
 
@@ -52,14 +46,12 @@ genmusic4:
 	fild	dword	[fcount]
 	fld1
 	fdivrp
-;	fld	dword	[snddown]
 	fild	word [ampl]
 	fmul	st1, st0
 	fldz
 	.samples:
 		; fpu stack: wave, vol, voldown
 		fld	st2
-;		fld	dword	[snddown]
 		fsubp	st2, st0
 
 		fadd	dword	[esi-4]
@@ -163,7 +155,7 @@ genmusic3:
 	ret
 
 genmusic2:
-	pusha
+	pushad
 	mov	edi, music
 	mov	esi, notes
 	mov	ecx, N
@@ -173,7 +165,7 @@ genmusic2:
 	add	eax, ebx
 	stosw
 	loop	.loop
-	popa
+	popad
 	ret
 
 genmusic:
