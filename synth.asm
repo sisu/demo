@@ -58,15 +58,18 @@ genmusic4:
 		faddp
 		fdivr	st1
 
-		fsin
+		fld	st0
+		frndint
+		fsubp
+;		fsin
 
 ;		mov	eax, [fslow]
 ;		test	eax, eax
 ;		jnz	.sinwave
 
-		fld	st0
-		fabs
-		fdivp
+;		fld	st0
+;		fabs
+;		fdivp
 	.sinwave:
 
 		fmul	st2
