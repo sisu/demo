@@ -107,21 +107,18 @@ strtab_size	equ	$ - strtab
 notetime	equ	4410*2
 snotes:	dw	15335,15322,15348,15309,15361,15335,15322,15309,0
 fnotesend:
-ftracks:	dd	0,notetime, 0.01,2*notetime
-;ftracks:	dw	0,notetime, 15267,2*notetime
+ftracks:	dw	0,notetime, 15267,2*notetime
 ftracksend:
 ampl	equ	snotes
 
 _start:
 ; generate music
 	mov	esi, ftracks
-	mov	ecx, (ftracksend-ftracks)/8
+	mov	ecx, (ftracksend-ftracks)/4
 
 .tracks:
 	lodsd
-	mov	[fslow], eax
-	lodsd
-	mov	[fcount], eax
+	mov	[fparams], eax
 	pushad
 
 	mov	esi, snotes-2
@@ -129,7 +126,7 @@ _start:
 .notes:
 
 	mov	ecx, [fcount]
-	fild	dword	[fcount]
+	fild	word	[fcount]
 	fld1
 	fdivrp
 	fild	word [ampl]
@@ -360,8 +357,12 @@ Color	resd 1
 
 MS	equ	44100*10
 musicpos:	resd	1
-fslow:	resd	1
+
+fparams:
+fslow	equ	$-2
+	resw	1
 fcount:	resd	1
+
 music:	resw	MS
 
 event:	resb	1000
