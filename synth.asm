@@ -18,24 +18,30 @@ ampl:	dw	15000
 ; instr: slow count
 
 notetime	equ	4410*2
-fnotes:	dd	0,notetime,  0.06, 0.05, 0.07, 0.04, 0.08, 0.06, 0.05, 0.04, 0
-	dd	0.01,2*notetime,  0.1, 0.1, 0.1, 0.1, -1
+snotes:	dw	15335,15322,15348,15309,15361,15335,15322,15309,0
+fnotes:	dd	0.006, 0.005, 0.007, 0.004, 0.008, 0.006, 0.005, 0.004, 0
+fnotesend:
+ftracks:	dd	0,notetime, 0.01,2*notetime
+ftracksend:
+;fnotes:	dd	0,notetime,  0.06, 0.05, 0.07, 0.04, 0.08, 0.06, 0.05, 0.04, 0
+;	dd	0.01,2*notetime,  0.1, 0.1, 0.1, 0.1, -1
 
 genmusic4:
 	pushad
-	mov	esi, fnotes
+	mov	esi, ftracks
+	mov	ecx, (ftracksend-ftracks)/8
 
-.instr:
-	mov	edi, music
+.tracks:
 	lodsd
 	mov	[fslow], eax
 	lodsd
 	mov	[fcount], eax
+	pushad
+
+;	mov	esi, fnotes
+	mov	esi, snotes-2
+	mov	edi, music
 .notes:
-;	xor	eax, eax
-;	lodsb
-;	test	al,al
-;	jle	.endgen
 
 	mov	ecx, [fcount]
 ;	mov	ebx, eax
@@ -81,14 +87,17 @@ genmusic4:
 	fstp	st0
 	fstp	st0
 
-	lodsd
-	test	eax, eax
-	jg	.notes
-	jz	.instr
+;	lodsd
 ;	test	eax, eax
-;	jg	.notes
-;	jz	.instr
-.endgen:
+	lodsw
+	mov	ax,	[esi]
+	test	ax, ax
+	jg	.notes
+;	jz	.tracks
+
+	popad
+	loop	.tracks
+
 	popad
 	ret
 

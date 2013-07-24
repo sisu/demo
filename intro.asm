@@ -104,27 +104,82 @@ strtab_size	equ	$ - strtab
 	int	0
 %endmacro
 
+notetime	equ	4410*2
+snotes:	dw	15335,15322,15348,15309,15361,15335,15322,15309,0
+fnotesend:
+ftracks:	dd	0,notetime, 0.01,2*notetime
+;ftracks:	dw	0,notetime, 15267,2*notetime
+ftracksend:
+ampl	equ	snotes
+
 _start:
 ; generate music
-	mov	edi,music
-	xor	ecx,ecx
-.genloop:
-	mov	eax,ecx
-	sar	eax,12
-	mov	edx,ecx
-	sar	edx,8
-	or	eax,edx
-	mov	edx,ecx
-	sar	edx,4
-	and	eax,edx
-	and	eax,63
-	imul	eax,ecx
-	sal	eax,8
+	mov	esi, ftracks
+	mov	ecx, (ftracksend-ftracks)/8
 
-	stosw
-	inc	ecx
-	cmp	ecx,MS
-	jl	.genloop
+.tracks:
+	lodsd
+	mov	[fslow], eax
+	lodsd
+	mov	[fcount], eax
+	pushad
+
+	mov	esi, snotes-2
+	mov	edi, music
+.notes:
+
+	mov	ecx, [fcount]
+	fild	dword	[fcount]
+	fld1
+	fdivrp
+	fild	word [ampl]
+	fmul	st1, st0
+	fldz
+	.samples:
+		; fpu stack: wave, vol, voldown
+		fld	st2
+		fsubp	st2, st0
+
+		fadd	dword	[esi]
+		fld	st0
+		fmul	dword	[fslow]
+
+		fld1
+		faddp
+		fdivr	st1
+
+		fld	st0
+		frndint
+		fsubp
+;		fsin
+
+;		mov	eax, [fslow]
+;		test	eax, eax
+;		jnz	.sinwave
+
+;		fld	st0
+;		fabs
+;		fdivp
+	.sinwave:
+
+		fmul	st2
+		fiadd	dword	[edi]
+		fistp	dword	[edi]
+		times	2	inc	edi
+		loop	.samples
+	fstp	st0
+	fstp	st0
+	fstp	st0
+
+	lodsw
+;	mov	ax,	[esi]
+	test	ax, ax
+	jg	.notes
+
+	popad
+	loop	.tracks
+
+
 
 ; load sdl and opengl
 	xor	ebp,ebp
@@ -229,8 +284,8 @@ playmusic:
 	ret
 
 ; section .data
-;aspec:	dd	44100 ; freq
-aspec:	dd	8000 ; freq
+aspec:	dd	44100 ; freq
+;aspec:	dd	8000 ; freq
 	dw	8010h ; AUDIO_S16
         db	1 ; channels
         db	0 ; silence
@@ -305,6 +360,8 @@ Color	resd 1
 
 MS	equ	44100*10
 musicpos:	resd	1
+fslow:	resd	1
+fcount:	resd	1
 music:	resw	MS
 
 event:	resb	1000

@@ -5,7 +5,7 @@ OBJ=$(AOBJ) $(COBJ)
 #CFLAGS=-Wall -m32 -Os -fomit-frame-pointer -flto -ffast-math
 CFLAGS=-Wall -m32 -O1 -fomit-frame-pointer -ffast-math
 
-all: packed editor soft-packed play
+all: packed editor soft-packed play notes
 
 intro: intro.asm t.frag.small
 	nasm -f bin $< -o $@
@@ -58,6 +58,9 @@ editor: %: %.cpp
 
 play: synth.o play.c
 	gcc $^ -Wall -O2 -o $@ `sdl-config --cflags` -lSDL -m32
+
+notes: notes.cpp
+	g++ $^ -Wall -O2 -o $@
 
 clean:
 	rm -f packed editor intro t.frag.small cshader $(AOBJ) play
