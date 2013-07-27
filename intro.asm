@@ -107,6 +107,7 @@ strtab_size	equ	$ - strtab
 notetime	equ	4410*2
 snotes:	dw	15335,15322,15348,15309,15361,15335,15322,15309,0
 fnotesend:
+; track: slowdown samplecount
 ftracks:	dw	0,notetime, 15267,2*notetime
 ftracksend:
 ampl	equ	snotes
