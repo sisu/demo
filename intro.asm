@@ -104,6 +104,10 @@ strtab_size	equ	$ - strtab
 	int	0
 %endmacro
 
+sdllib:	db	"libSDL-1.2.so.0",0
+gllib:	db	"libGL.so",0
+;libs:	dd	gllib,sdllib
+
 notetime	equ	4410*2
 snotes:	dw	15335,15322,15348,15309,15361,15335,15322,15309,0
 fnotesend:
@@ -184,11 +188,13 @@ _start:
 	inc	ebp
 	; assumes df=0 ; cld
 	mov	edi,sdlptrs
+	push	2
+	push	sdllib
 .loadloop:
-	mov	eax,[libs+4*ebp]
+;	mov	eax,[libs+4*ebp]
 
-	push	2	; RTLD_NOW
-	push	eax
+;	push	2	; RTLD_NOW
+;	push	eax
 dlopen	equ	$+1
 	call	0
 ;	call	[dlopen]
@@ -208,6 +214,8 @@ dlsym	equ	$+1
 	cmp	esi,endstrs
 	jne	.symloop
 
+	push	2
+	push	gllib
 	dec	ebp
 	jz	.loadloop
 
@@ -262,8 +270,8 @@ introloop:
 	push	event
 	call	F(PollEvent)
 
-;	add	esp,4+4*4+4
-	times	6	pop	eax
+	add	esp,6*4
+;	times	6	pop	eax
 	cmp	byte	[event],2
 	jne	introloop
 	int	0
@@ -292,10 +300,6 @@ aspec:	dd	44100 ; freq
         dd	0 ; size
         dd	playmusic
 ;        dd	music ; not used
-
-sdllib:	db	"libSDL-1.2.so.0",0
-gllib:	db	"libGL.so",0
-libs:	dd	gllib,sdllib
 
 f0:
 S_SetVideoMode:	db	"SDL_SetVideoMode",0
