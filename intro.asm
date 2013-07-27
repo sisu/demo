@@ -110,7 +110,6 @@ gllib:	db	"libGL.so",0
 
 notetime	equ	4410*2
 snotes:	dw	15335,15322,15348,15309,15361,15335,15322,15309,0
-fnotesend:
 ; track: slowdown samplecount
 ftracks:	dw	0,notetime, 15267,2*notetime
 ftracksend:
@@ -293,13 +292,13 @@ playmusic:
 aspec:	dd	44100 ; freq
 ;aspec:	dd	8000 ; freq
 	dw	8010h ; AUDIO_S16
-        db	1 ; channels
-        db	0 ; silence
-        dw	1024 ; samples
-        dw	0 ; padding
-        dd	0 ; size
-        dd	playmusic
-;        dd	music ; not used
+	db	1 ; channels
+	db	0 ; silence
+	dw	1024 ; samples
+	dw	0 ; padding
+	dd	0 ; size
+	dd	playmusic
+;	dd	music ; not used
 
 f0:
 S_SetVideoMode:	db	"SDL_SetVideoMode",0
