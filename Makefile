@@ -63,4 +63,4 @@ notes: notes.cpp
 	g++ $^ -Wall -O2 -o $@
 
 clean:
-	rm -f packed editor intro t.frag.small cshader $(AOBJ) play
+	rm -f packed editor intro t.frag.small cshader $(AOBJ) play soft-packed

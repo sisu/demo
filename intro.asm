@@ -171,7 +171,7 @@ _start:
 		mov	ebx, eax
 		and	bl, 3
 		mov	bl, [inotes+ebx]
-		shr	ebx, 1
+		shr	ebx, 2
 		imul	eax, 3
 		call	intplay
 		loop	.ilowmelody
@@ -183,10 +183,10 @@ _start:
 		mov	edx, bassplay
 		bt	edx, eax
 		jnc	.inobass
-		mov	bl, 327/8
+		mov	bl, 327/16
 		test	al, 16
 		jz	.ihighbass
-		mov	bl, 260/8
+		mov	bl, 260/16
 	.ihighbass:
 		call	intplay
 	.inobass:
