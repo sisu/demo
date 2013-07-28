@@ -108,22 +108,10 @@ sdllib:	db	"libSDL-1.2.so.0",0
 gllib:	db	"libGL.so",0
 ;libs:	dd	gllib,sdllib
 
-; 2^(-1/6)
-;keymod:	dd	1.0 ;todo
 
-;snotes:	dw	15335,15322,15348,15309,15361,15335,15322,15309,0
-snotes:	dw      15348,15267,15287,15220,0
-; track: slowdown samplecount
-;ftracks:	dw	0,notetime, 15267,2*notetime
-;ftracksend:
+inotes:	dw	490, 327, 367, 245
 
-; track: basefreq, notecount, notelen
-atracks:
-
-ampl0:	dw	15000
-
-notetime	equ	4410*4
-voldown:	dd	0.850340136054 ; ampl0/notetime
+notetime	equ	4410*2
 
 bp0	equ	(1|8|16)
 bassplay	equ	bp0 | (bp0<<8) | (bp0<<16) | (bp0<<24)
@@ -131,104 +119,80 @@ bassplay	equ	bp0 | (bp0<<8) | (bp0<<16) | (bp0<<24)
 curmusic:	dd music
 
 
-playnote:	; eac: start, ebx: freqptr
+intplay:	; eax: start, ebx: freqptr
 	pushad
 	mov	ecx, notetime
 	imul	eax, ecx
 	mov	edi, [curmusic]
 	add	edi, eax
+	add	edi, eax
 
-	fild	word [ampl0]
-;	fmul	st1, st0
-	fldz
+	xor	edx, edx
+	imul	ebx, [ifreqmod]
+	shr	ebx, 16
+	xor	edx, edx
 	.samples:
-		; fpu stack: wave, vol
-		fld	dword	[voldown]
-		fsubp	st2, st0
-
-		fld	dword	[ebx]
-		fmul	dword	[freqmod]
-		fmul	dword	[freqmod2]
-
-		faddp
-
-		fld	st0
-		fld	st0
-		frndint
-		fsubp
-;		fsin
-
-		fmul	st2
-		fiadd	dword	[edi]
-		fistp	dword	[edi]
-		times	2	inc	edi
+		; edx: wave, esi: vol
+		add	edx, ebx
+		mov	eax, edx
+		and	eax, 0xffff
+		imul	eax, ecx
+		shr	eax, 16
+		add	ax, [edi]
+		stosw
 		loop	.samples
-
-	fstp	st0
-	fstp	st0
 	popad
 	ret
 
 _start:
-; generate music
 	mov	ebp, 4
-.musicgen:
-;	mov	dword [freqmod2], 0x3f800000
-	mov	dword [freqmod2], 0x40000000
+.imusicgen:
+	mov	dword [ifreqmod], 2<<16
 	test	ebp, 1
-	jz	.highround
-;	mov	dword [freqmod2], 0x3f6411f0
-	mov	dword [freqmod2], 0x3fe411f0
-.highround:
-
-	mov	dword [freqmod], 0x3f800000
+	jz	.ihighround
+	mov	dword [ifreqmod], 116771
+.ihighround:
 	mov	ecx, 32
-;	mov	ecx, 1
-	.highmelody:
+	.ihighmelody:
 		mov	eax, ecx
 		dec	eax
-		mov	edx, eax
-		and	dl, 3
-		mov	ebx, snotes-2
-		add	ebx, edx
-		add	ebx, edx
-		call	playnote
-		loop	.highmelody
-	mov	dword [freqmod], 0x3e800000
+		mov	ebx, eax
+		and	bl, 3
+		mov	bx, [inotes+2*ebx]
+		call	intplay
+		loop	.ihighmelody
+
 	mov	ecx, 11
-	.lowmelody:
+	.ilowmelody:
 		mov	eax, ecx
 		dec	eax
-		mov	edx, eax
+		mov	ebx, eax
+		and	bl, 3
+		mov	bx, [inotes+2*ebx]
+		shr	ebx, 1
 		imul	eax, 3
-		and	dl, 3
-		mov	ebx, snotes-2
-		add	ebx, edx
-		add	ebx, edx
-		call	playnote
-		loop	.lowmelody
+		call	intplay
+		loop	.ilowmelody
 
 	mov	ecx, 32
-	mov	ebx, snotes
-	.bassmelody:
+	.ibassmelody:
 		mov	eax, ecx
 		dec	eax
 		mov	edx, bassplay
 		bt	edx, eax
-		jnc	.nobass
-		mov	dword [freqmod], 0x3e000000
+		jnc	.inobass
+		mov	ebx, 327/4
 		test	eax, 16
-		jz	.highbass
-		mov	dword [freqmod], 0x3dcb2ff5
-	.highbass:
-		call	playnote
-	.nobass
-		loop	.bassmelody
+		mov	edx, 260/4
+		cmovnz	ebx, edx
+	.ihighbass:
+		call	intplay
+	.inobass:
+		loop	.ibassmelody
 
-	add	dword [curmusic], 32*notetime
+	add	dword [curmusic], 2*32*notetime
 	dec	ebp
-	jnz	.musicgen
-
+	jnz	.imusicgen
 
 
 ; load sdl and opengl
@@ -415,8 +379,7 @@ Color	resd 1
 MS	equ	32*4*notetime
 musicpos:	resd	1
 
-freqmod:	resd	1
-freqmod2:	resd	1
+ifreqmod:	resd	1
 
 event:	resb	1000
 
