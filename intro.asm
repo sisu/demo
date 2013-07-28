@@ -153,7 +153,8 @@ _start:
 	jz	.ihighround
 	mov	dword [ifreqmod], 116771*2
 .ihighround:
-	mov	ecx, 32
+	xor	ecx,ecx
+	mov	cl, 32
 	.ihighmelody:
 		mov	eax, ecx
 		dec	eax
@@ -163,7 +164,7 @@ _start:
 		call	intplay
 		loop	.ihighmelody
 
-	mov	ecx, 11
+	mov	cl, 11
 	.ilowmelody:
 		mov	eax, ecx
 		dec	eax
@@ -175,17 +176,17 @@ _start:
 		call	intplay
 		loop	.ilowmelody
 
-	mov	ecx, 32
+	mov	cl, 32
 	.ibassmelody:
 		mov	eax, ecx
 		dec	eax
 		mov	edx, bassplay
 		bt	edx, eax
 		jnc	.inobass
-		mov	ebx, 327/8
-		test	eax, 16
-		mov	edx, 260/8
-		cmovnz	ebx, edx
+		mov	bl, 327/8
+		test	al, 16
+		jz	.ihighbass
+		mov	bl, 260/8
 	.ihighbass:
 		call	intplay
 	.inobass:
