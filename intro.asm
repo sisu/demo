@@ -109,7 +109,8 @@ gllib:	db	"libGL.so",0
 ;libs:	dd	gllib,sdllib
 
 
-inotes:	dw	490, 327, 367, 245
+;inotes:	dw	490, 327, 367, 245
+inotes:	db	490/2, 327/2, 367/2, 245/2
 
 notetime	equ	4410*2
 
@@ -147,10 +148,10 @@ intplay:	; eax: start, ebx: freqptr
 _start:
 	mov	ebp, 4
 .imusicgen:
-	mov	dword [ifreqmod], 2<<16
+	mov	dword [ifreqmod], 4<<16
 	test	ebp, 1
 	jz	.ihighround
-	mov	dword [ifreqmod], 116771
+	mov	dword [ifreqmod], 116771*2
 .ihighround:
 	mov	ecx, 32
 	.ihighmelody:
@@ -158,7 +159,7 @@ _start:
 		dec	eax
 		mov	ebx, eax
 		and	bl, 3
-		mov	bx, [inotes+2*ebx]
+		mov	bl, [inotes+ebx]
 		call	intplay
 		loop	.ihighmelody
 
@@ -168,7 +169,7 @@ _start:
 		dec	eax
 		mov	ebx, eax
 		and	bl, 3
-		mov	bx, [inotes+2*ebx]
+		mov	bl, [inotes+ebx]
 		shr	ebx, 1
 		imul	eax, 3
 		call	intplay
