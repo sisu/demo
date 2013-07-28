@@ -55,8 +55,8 @@ dynamic:
 ;	dd	4,hash
 	dd	5,strtab
 	dd	6,symtab
-	dd	10,strtab_size
-	dd	11,symtab_size
+;	dd	10,strtab_size
+;	dd	11,symtab_size
 	dd	17,reltext
 	dd	18,reltext_size
 	dd	19,8
