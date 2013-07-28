@@ -151,7 +151,7 @@ _start:
 .imusicgen:
 	pushad
 	mov	dword [ifreqmod], 4<<16
-	test	ecx, 1
+	test	cl, 1
 	jz	.ihighround
 	mov	dword [ifreqmod], 116771*2
 .ihighround:
@@ -244,17 +244,16 @@ dlsym	equ	$+1
 	push	600
 	push	800
 	call	F(SetVideoMode)
-	xor	ebx,ebx
-	push	ebx ; 0
+	push	0
 	call	F(ShowCursor)
 	push	aspec
 	call	F(OpenAudio)
-	push	ebx ; 0
+	push	0
 	call	F(PauseAudio)
 
 	push	8b30h ; GL_FRAGMENT_SHADER
 	call	F(CreateShader)
-	push	ebx ; 0
+	push	0
 	push	fshaderptr
 	push	1
 	push	eax
