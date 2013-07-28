@@ -182,9 +182,9 @@ _start:
 		mov	edx, bassplay
 		bt	edx, eax
 		jnc	.inobass
-		mov	ebx, 327/4
+		mov	ebx, 327/8
 		test	eax, 16
-		mov	edx, 260/4
+		mov	edx, 260/8
 		cmovnz	ebx, edx
 	.ihighbass:
 		call	intplay
@@ -270,9 +270,9 @@ dlsym	equ	$+1
 	; main loop
 introloop:
 	call	F(GetTicks)
-endtime	equ	1000*60
-	cmp	eax, endtime
-	jg	end
+;endtime	equ	1000*60
+;	cmp	eax, endtime
+;	jg	end
 	push	eax
 	call	F(Color)
 
