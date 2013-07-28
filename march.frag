@@ -12,7 +12,7 @@ void main() {
 
 	for(int i=0; i<50; ++i)
 		g = vec3(F(c+h), F(c+h.yxz), F(c+h.yzx))-F(c),
-		c += min(.0002*F(c)/length(g),1)*v;
+		c += min(.0001*F(c)/length(g),1)*v;
 
 	g = normalize(g);
 	h = normalize(sin(vec3(t,1.1*t,-1)));

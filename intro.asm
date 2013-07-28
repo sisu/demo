@@ -291,8 +291,8 @@ introloop:
 ;	times	6	pop	eax
 	cmp	byte	[event],2
 	jne	introloop
-end:
-	int	0
+;end:
+;	int	0
 
 playmusic:
 	mov	edi,[esp+8]
