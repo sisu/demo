@@ -1,9 +1,9 @@
-float t = 300*gl_Color.x,y,r;
+float t = 300*gl_Color.x,y;
 float F(vec3 v) {
-	r=4;
+	y=4;
 	for(int i=0; i<9; ++i)
-		r -= 1/length(2*sin(.4*t*sin(vec3(i,1+i,2-i)))-v+vec3(0.04*sin(10*v.y),0.04*sin(10*v.z+t+v.x),9));
-	return r;
+		y -= 1/length(2*sin(.4*t*sin(vec3(i,1+i,2-i)))-v+vec3(0.04*sin(10*v.y),0.04*sin(10*v.z+t+v.x),9));
+	return y;
 }
 void main() {
 //	float y,o;//,e=1e-3;
@@ -11,9 +11,8 @@ void main() {
 	h.x=.001;
 
 	for(int i=0; i<50; ++i)
-		y = F(c),
-		g = vec3(F(c+h), F(c+h.yxz), F(c+h.yzx))-y,
-		c += min(.0002*y/length(g),1)*v;
+		g = vec3(F(c+h), F(c+h.yxz), F(c+h.yzx))-F(c),
+		c += min(.0002*F(c)/length(g),1)*v;
 
 	g = normalize(g);
 	h = normalize(sin(vec3(t,1.1*t,-1)));
