@@ -128,15 +128,14 @@ intplay:	; eax: start, ebx: freqptr
 	add	edi, eax
 	add	edi, eax
 
-	xor	edx, edx
 	imul	ebx, [ifreqmod]
 	shr	ebx, 16
 	xor	edx, edx
 	.samples:
 		; edx: wave, esi: vol
 		add	edx, ebx
-		mov	eax, edx
-		and	eax, 0xffff
+		mov	esi, edx
+		mov	ax, si
 		imul	eax, ecx
 		shr	eax, 16
 		add	ax, [edi]
