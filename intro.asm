@@ -320,10 +320,10 @@ aspec:	dd	44100 ; freq
 
 f0:
 S_SetVideoMode:	db	"SDL_SetVideoMode",0
+S_ShowCursor:	db	"SDL_ShowCursor",0
 S_GetTicks:	db	"SDL_GetTicks",0
 S_PollEvent:	db	"SDL_PollEvent",0
 S_Swap:	db	"SDL_GL_SwapBuffers",0
-S_ShowCursor:	db	"SDL_ShowCursor",0
 S_OpenAudio:	db	"SDL_OpenAudio",0
 S_PauseAudio:	db	"SDL_PauseAudio",0
 ;S_Quit:	db	"SDL_Quit",0
@@ -356,10 +356,10 @@ ABSOLUTE $
 
 sdlptrs:
 SetVideoMode:	resd	1
+ShowCursor:	resd	1
 GetTicks:	resd	1
 PollEvent:	resd	1
 SwapBuffers:	resd	1
-ShowCursor:	resd	1
 OpenAudio:	resd	1
 PauseAudio:	resd	1
 ;Quit:	resd	1
