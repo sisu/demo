@@ -146,14 +146,14 @@ intplay:	; eax: start, ebx: freqptr
 	ret
 
 _start:
-	mov	ebp, 4
+	mov	ecx, 8
 .imusicgen:
+	pushad
 	mov	dword [ifreqmod], 4<<16
-	test	ebp, 1
+	test	ecx, 1
 	jz	.ihighround
 	mov	dword [ifreqmod], 116771*2
 .ihighround:
-	xor	ecx,ecx
 	mov	cl, 32
 	.ihighmelody:
 		mov	eax, ecx
@@ -193,8 +193,8 @@ _start:
 		loop	.ibassmelody
 
 	add	dword [curmusic], 2*32*notetime
-	dec	ebp
-	jnz	.imusicgen
+	popad
+	loop	.imusicgen
 
 
 ; load sdl and opengl
