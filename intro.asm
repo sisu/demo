@@ -145,8 +145,9 @@ intplay:	; eax: start, ebx: freqptr
 	popad
 	ret
 
+musiciters	equ	8
 _start:
-	mov	ecx, 8
+	mov	ecx, musiciters
 .imusicgen:
 	pushad
 	mov	dword [ifreqmod], 4<<16
@@ -378,7 +379,7 @@ Color	resd 1
 ;GetError:	resd 1
 
 
-MS	equ	32*4*notetime
+MS	equ	32*musiciters*notetime
 musicpos:	resd	1
 
 ifreqmod:	resd	1
