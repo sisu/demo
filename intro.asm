@@ -143,8 +143,6 @@ playnote:	; eac: start, ebx: freqptr
 	fldz
 	.samples:
 		; fpu stack: wave, vol
-;		fld	st2
-;		fild	word	[voldown]
 		fld	dword	[voldown]
 		fsubp	st2, st0
 
@@ -153,28 +151,12 @@ playnote:	; eac: start, ebx: freqptr
 		fmul	dword	[freqmod2]
 
 		faddp
-;		fadd	dword	[ebx]
-;		fld	st0
-;		fmul	dword	[fslow]
-
-;		fld1
-;		faddp
-;		fdivr	st1
 
 		fld	st0
 		fld	st0
 		frndint
 		fsubp
-		fsin
-
-;		mov	eax, [fslow]
-;		test	eax, eax
-;		jnz	.sinwave
-
-;		fld	st0
-;		fabs
-;		fdivp
-;	.sinwave:
+;		fsin
 
 		fmul	st2
 		fiadd	dword	[edi]
@@ -323,6 +305,9 @@ dlsym	equ	$+1
 	; main loop
 introloop:
 	call	F(GetTicks)
+endtime	equ	1000*60
+	cmp	eax, endtime
+	jg	end
 	push	eax
 	call	F(Color)
 
@@ -340,6 +325,7 @@ introloop:
 ;	times	6	pop	eax
 	cmp	byte	[event],2
 	jne	introloop
+end:
 	int	0
 
 playmusic:
@@ -426,14 +412,14 @@ Color	resd 1
 ;GetError:	resd 1
 
 
-MS	equ	44100*100
+MS	equ	32*4*notetime
 musicpos:	resd	1
 
 freqmod:	resd	1
 freqmod2:	resd	1
 
-music:	resw	MS
-
 event:	resb	1000
+
+music:	resw	MS
 
 memsize	equ	$ - $$
