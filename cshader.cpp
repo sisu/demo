@@ -1,6 +1,10 @@
 #include <iostream>
+#include <map>
 using namespace std;
-int main() {
+int main(int argc, char* argv[]) {
+	map<string,string> replace;
+	for(int i=1; i+1<argc; i+=2)
+		replace[argv[i]] = argv[i+1];
 	string s;
 	string src;
 	while(getline(cin,s)) {
@@ -19,7 +23,8 @@ int main() {
 			}
 			string wd = src.substr(i,j-i);
 //			cout<<wd<<'\n';
-			res+=wd;
+			if (replace.count(wd)) res += replace[wd];
+			else res+=wd;
 			i=j-1;
 			pword=1;
 			continue;

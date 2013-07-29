@@ -247,13 +247,14 @@ dlsym	equ	$+1
 	mov	ebp,sdlptrs
 
 ; initialize opengl
-	push	2	; SDL_OPENGL
+;	push	2	; SDL_OPENGL
 ;	push	0x80000002 ; SDL_OPENGL | SDL_FULLSCREEN
+	push	2 | FULLSCREEN
 	push	0
 ;	push	600
 ;	push	800
-	push	720
-	push	1280
+	push	HEIGHT
+	push	WIDTH
 	call	F(SetVideoMode)
 	push	0
 	call	F(ShowCursor)

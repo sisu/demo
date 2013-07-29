@@ -4,11 +4,13 @@ OBJ=$(AOBJ) $(COBJ)
 #OBJ=$(AOBJ)
 #CFLAGS=-Wall -m32 -Os -fomit-frame-pointer -flto -ffast-math
 CFLAGS=-Wall -m32 -O1 -fomit-frame-pointer -ffast-math
+WIDTH=1280
+HEIGHT=720
 
 all: packed editor soft-packed play notes
 
 intro: intro.asm t.frag.small
-	nasm -f bin $< -o $@
+	nasm -f bin $< -o $@ -dWIDTH=$(WIDTH) -dHEIGHT=$(HEIGHT) -dFULLSCREEN=0
 	chmod +x $@
 	du -b $@
 
@@ -48,7 +50,7 @@ $(COBJ): %.o: %.c load.h
 
 #t.frag.small: t.frag cshader
 t.frag.small: march.frag cshader
-	./cshader < $< > $@
+	./cshader WIDTH $(WIDTH) HEIGHT $(HEIGHT) < $< > $@
 
 cshader: %: %.cpp
 	g++ $< -o $@ -Wall -O2
