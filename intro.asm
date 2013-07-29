@@ -300,14 +300,10 @@ introloop:
 playmusic:
 	mov	edi,[esp+8]
 	mov	ecx,[esp+12]
-	mov	esi, musicpos
-	add	[esi], ecx
-	lodsd
-	sub	eax, ecx
-	add	esi, eax
+	mov	esi, music
+	musicpos	equ	$-4
+	add	[musicpos], ecx
 	rep	movsb
-;introloop:
-;genmusic:
 	ret
 
 ; section .data
@@ -383,7 +379,7 @@ Color	resd 1
 event:	resb	1000
 
 MS	equ	32*musiciters*notetime
-musicpos:	resd	1
+;musicpos:	resd	1
 
 ;ifreqmod:	resd	1
 
