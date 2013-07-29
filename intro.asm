@@ -105,7 +105,7 @@ strtab_size	equ	$ - strtab
 %endmacro
 
 sdllib:	db	"libSDL-1.2.so.0",0
-gllib:	db	"libGL.so",0
+gllib:	db	"libGL.so.1",0
 ;libs:	dd	gllib,sdllib
 
 
