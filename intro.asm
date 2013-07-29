@@ -112,7 +112,8 @@ gllib:	db	"libGL.so",0
 ;inotes:	dw	490, 327, 367, 245
 inotes:	db	490/2, 327/2, 367/2, 245/2
 
-notetime	equ	4410*2
+FREQ	equ	44100
+notetime	equ	FREQ/10*2
 
 bp0	equ	(1|8|16)
 bassplay	equ	bp0 | (bp0<<8) | (bp0<<16) | (bp0<<24)
@@ -281,7 +282,7 @@ dlsym	equ	$+1
 	; main loop
 introloop:
 	call	F(GetTicks)
-endtime	equ	MS*1000/44100+500
+endtime	equ	MS*1000/FREQ+500
 	cmp	eax, endtime
 	jg	end
 	push	eax
@@ -317,8 +318,7 @@ playmusic:
 	ret
 
 ; section .data
-aspec:	dd	44100 ; freq
-;aspec:	dd	8000 ; freq
+aspec:	dd	FREQ ; freq
 	dw	8010h ; AUDIO_S16
 	db	1 ; channels
 	db	0 ; silence
