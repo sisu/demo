@@ -117,18 +117,22 @@ notetime	equ	4410*2
 bp0	equ	(1|8|16)
 bassplay	equ	bp0 | (bp0<<8) | (bp0<<16) | (bp0<<24)
 
-curmusic:	dd music
+;curmusic:	dd music
 
 
 intplay:	; eax: start, ebx: freqptr
 	pushad
 	mov	ecx, notetime
 	imul	eax, ecx
-	mov	edi, [curmusic]
+;	mov	edi, [curmusic]
+	mov	edi, music
+	curmusic	equ	$-4
 	add	edi, eax
 	add	edi, eax
 
-	imul	ebx, [ifreqmod]
+;	imul	ebx, [ifreqmod]
+	imul	ebx, 1<<16	; constant will be replaced
+	ifreqmod	equ	$-4
 	shr	ebx, 16
 	xor	edx, edx
 	.samples:
@@ -380,7 +384,7 @@ Color	resd 1
 MS	equ	32*musiciters*notetime
 musicpos:	resd	1
 
-ifreqmod:	resd	1
+;ifreqmod:	resd	1
 
 event:	resb	1000
 
