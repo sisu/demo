@@ -380,13 +380,12 @@ UseProgram	resd 1
 Color	resd 1
 ;GetError:	resd 1
 
+event:	resb	1000
 
 MS	equ	32*musiciters*notetime
 musicpos:	resd	1
 
 ;ifreqmod:	resd	1
-
-event:	resb	1000
 
 music:	resw	MS
 
