@@ -283,8 +283,8 @@ dlsym	equ	$+1
 introloop:
 	call	F(GetTicks)
 endtime	equ	MS*1000/FREQ+500
-	cmp	eax, endtime
-	jg	end
+;	cmp	eax, endtime
+;	jg	end
 	push	eax
 	call	F(Color)
 
@@ -303,10 +303,10 @@ endtime	equ	MS*1000/FREQ+500
 	cmp	byte	[event],2
 	jne	introloop
 end:
-	call	F(Quit)
-	xor	eax, eax
-	inc	eax
-	int	128
+;	call	F(Quit)
+;	xor	eax, eax
+;	inc	eax
+;	int	128
 
 playmusic:
 	mov	edi,[esp+8]
@@ -336,7 +336,7 @@ S_PollEvent:	db	"SDL_PollEvent",0
 S_Swap:	db	"SDL_GL_SwapBuffers",0
 S_OpenAudio:	db	"SDL_OpenAudio",0
 S_PauseAudio:	db	"SDL_PauseAudio",0
-S_Quit:	db	"SDL_Quit",0
+;S_Quit:	db	"SDL_Quit",0
 
 gRecti:	db	"glRecti",0
 gCreateShader:	db	"glCreateShader",0
@@ -372,7 +372,7 @@ PollEvent:	resd	1
 SwapBuffers:	resd	1
 OpenAudio:	resd	1
 PauseAudio:	resd	1
-Quit:	resd	1
+;Quit:	resd	1
 
 glptrs:
 Recti:	resd	1
