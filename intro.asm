@@ -142,6 +142,11 @@ intplay:	; eax: start, ebx: freqptr
 		mov	ax, si
 		imul	eax, ecx
 		shr	eax, 16
+
+		cmp	ebx, 80
+		jg	.lol
+		add	eax, eax
+	.lol:
 		add	ax, [edi]
 		stosw
 		loop	.samples
@@ -240,12 +245,14 @@ dlsym	equ	$+1
 	; for smaller addressing
 	mov	ebp,sdlptrs
 
-
 ; initialize opengl
 	push	2	; SDL_OPENGL
+;	push	0x80000002 ; SDL_OPENGL | SDL_FULLSCREEN
 	push	0
-	push	600
-	push	800
+;	push	600
+;	push	800
+	push	720
+	push	1280
 	call	F(SetVideoMode)
 	push	0
 	call	F(ShowCursor)
@@ -274,9 +281,9 @@ dlsym	equ	$+1
 	; main loop
 introloop:
 	call	F(GetTicks)
-;endtime	equ	1000*60
-;	cmp	eax, endtime
-;	jg	end
+endtime	equ	MS*1000/44100+500
+	cmp	eax, endtime
+	jg	end
 	push	eax
 	call	F(Color)
 
@@ -294,8 +301,11 @@ introloop:
 ;	times	6	pop	eax
 	cmp	byte	[event],2
 	jne	introloop
-;end:
-;	int	0
+end:
+	call	F(Quit)
+	xor	eax, eax
+	inc	eax
+	int	128
 
 playmusic:
 	mov	edi,[esp+8]
@@ -326,7 +336,7 @@ S_PollEvent:	db	"SDL_PollEvent",0
 S_Swap:	db	"SDL_GL_SwapBuffers",0
 S_OpenAudio:	db	"SDL_OpenAudio",0
 S_PauseAudio:	db	"SDL_PauseAudio",0
-;S_Quit:	db	"SDL_Quit",0
+S_Quit:	db	"SDL_Quit",0
 
 gRecti:	db	"glRecti",0
 gCreateShader:	db	"glCreateShader",0
@@ -362,7 +372,7 @@ PollEvent:	resd	1
 SwapBuffers:	resd	1
 OpenAudio:	resd	1
 PauseAudio:	resd	1
-;Quit:	resd	1
+Quit:	resd	1
 
 glptrs:
 Recti:	resd	1
@@ -383,6 +393,6 @@ MS	equ	32*musiciters*notetime
 
 ;ifreqmod:	resd	1
 
-music:	resw	MS
+music:	resw	MS + (1<<20)
 
 memsize	equ	$ - $$

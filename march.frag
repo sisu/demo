@@ -7,7 +7,7 @@ float F(vec3 v) {
 }
 void main() {
 //	float y,o;//,e=1e-3;
-	vec3 v = vec3(gl_FragCoord.xy/vec2(800,600)-.5,1), c=0, g, h=0;
+	vec3 v = vec3(gl_FragCoord.xy/vec2(1280,720)-.5,1), c=0, g, h=0;
 	h.x=.001;
 
 	for(int i=0; i<50; ++i)
