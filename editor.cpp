@@ -55,6 +55,20 @@ GLuint makeProgram(string str) {
 	glLinkProgram(prog);
 	return prog;
 }
+const string replace[2][2] = {
+	{"WIDTH","800"},
+	{"HEIGHT","600"},
+};
+string setWH(string s) {
+	for(int i=0; i<2; ++i) {
+		size_t idx;
+		string x = replace[i][0];
+		while((idx=s.find(x))!=string::npos) {
+			s = s.substr(0,idx) + replace[i][1] + s.substr(idx+x.size());
+		}
+	}
+	return s;
+}
 
 int main(int argc, char* argv[]) {
 	assert(argc>1);
@@ -74,7 +88,7 @@ int main(int argc, char* argv[]) {
 			string pstr = loadFile(file);
 			if (pstr != prevStr && !pstr.empty()) {
 				prevStr = pstr;
-				GLuint prog = makeProgram(pstr);
+				GLuint prog = makeProgram(setWH(pstr));
 				if (prog) {
 					cout<<"OK\n";
 					glUseProgram(prog);
