@@ -110,7 +110,7 @@ gllib:	db	"libGL.so.1",0
 
 
 ;inotes:	dw	490, 327, 367, 245
-inotes:	db	490/2, 327/2, 367/2, 245/2
+;inotes:	db	490/2, 327/2, 367/2, 245/2
 
 FREQ	equ	44100
 notetime	equ	FREQ/10*2
@@ -124,12 +124,6 @@ bassplay	equ	bp0 | (bp0<<8) | (bp0<<16) | (bp0<<24)
 intplay:	; eax: start, ebx: freqptr
 	pushad
 	mov	ecx, notetime
-	imul	eax, ecx
-;	mov	edi, [curmusic]
-	mov	edi, music
-	curmusic	equ	$-4
-	add	edi, eax
-	add	edi, eax
 
 ;	imul	ebx, [ifreqmod]
 	imul	ebx, 1<<16	; constant will be replaced
@@ -150,11 +144,13 @@ intplay:	; eax: start, ebx: freqptr
 		add	ax, [edi]
 		stosw
 		loop	.samples
+	mov	[esp], edi
 	popad
 	ret
 
 musiciters	equ	8
 _start:
+	mov	edi, music
 	mov	ecx, musiciters
 .imusicgen:
 	pushad
@@ -163,32 +159,32 @@ _start:
 	jz	.ihighround
 	mov	dword [ifreqmod], 116771*2
 .ihighround:
+	xor	ebx, ebx
+	mov	edx, (490/2) | (327/2<<8) | (367/2<<16) | (245/2<<24)
 	mov	cl, 32
+	pushad
 	.ihighmelody:
-		mov	eax, ecx
-		dec	eax
-		mov	ebx, eax
-		and	bl, 3
-		mov	bl, [inotes+ebx]
+		mov	bl, dl
+		ror	edx, 8
 		call	intplay
 		loop	.ihighmelody
+	popad
 
 	mov	cl, 11
+	pushad
 	.ilowmelody:
-		mov	eax, ecx
-		dec	eax
-		mov	ebx, eax
-		and	bl, 3
-		mov	bl, [inotes+ebx]
+		mov	bl, dl
+		ror	edx, 8
 		shr	ebx, 2
-		imul	eax, 3
 		call	intplay
+		add	edi, 4*notetime
 		loop	.ilowmelody
+	popad
 
+	xor	eax, eax
 	mov	cl, 32
 	.ibassmelody:
-		mov	eax, ecx
-		dec	eax
+		xor	ebx, ebx
 		mov	edx, bassplay
 		bt	edx, eax
 		jnc	.inobass
@@ -197,11 +193,12 @@ _start:
 		jz	.ihighbass
 		mov	bl, 260/16
 	.ihighbass:
-		call	intplay
 	.inobass:
+		call	intplay
+		inc	eax
 		loop	.ibassmelody
 
-	add	dword [curmusic], 2*32*notetime
+	mov	[esp], edi
 	popad
 	loop	.imusicgen
 
