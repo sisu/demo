@@ -139,8 +139,7 @@ intplay:	; eax: start, ebx: freqptr
 	.samples:
 		; edx: wave, esi: vol
 		add	edx, ebx
-		mov	esi, edx
-		mov	ax, si
+		mov	ax, dx
 		imul	eax, ecx
 		shr	eax, 16
 
