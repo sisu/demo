@@ -6,11 +6,13 @@ OBJ=$(AOBJ) $(COBJ)
 CFLAGS=-Wall -m32 -O1 -fomit-frame-pointer -ffast-math
 WIDTH=1280
 HEIGHT=720
+FULLSCREEN=0
+#FULLSCREEN=0x80000000
 
 all: packed editor soft-packed play notes
 
 intro: intro.asm t.frag.small
-	nasm -f bin $< -o $@ -dWIDTH=$(WIDTH) -dHEIGHT=$(HEIGHT) -dFULLSCREEN=0
+	nasm -f bin $< -o $@ -dWIDTH=$(WIDTH) -dHEIGHT=$(HEIGHT) -dFULLSCREEN=$(FULLSCREEN)
 	chmod +x $@
 	du -b $@
 
