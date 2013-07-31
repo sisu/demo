@@ -19,6 +19,6 @@ void main() {
 	y = dot(v, reflect(h, g)); //*max(0.1*t-20,1);
 	gl_FragColor = y*y;
 	gl_FragColor.y+=dot(h,g);
-	gl_FragColor.x += sin(length(c)-t*log(t));
+	gl_FragColor.x += sin(length(c)-t);
 //	gl_FragColor.x += sin(c.x)*sin(c.z+t)*sin(t/5);
 }
