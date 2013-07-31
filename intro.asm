@@ -121,7 +121,7 @@ bassplay	equ	bp0 | (bp0<<8) | (bp0<<16) | (bp0<<24)
 ;curmusic:	dd music
 
 
-intplay:	; eax: start, ebx: freqptr
+intplay:	; ebx: freqptr
 	pushad
 	mov	ecx, notetime
 

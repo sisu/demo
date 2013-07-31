@@ -1,9 +1,8 @@
 float t = 300*gl_Color.x,y;
-float F(vec3 v) {
+void F(vec3 v) {
 	y=4;
 	for(int i=0; i<9; ++i)
-		y -= 1/length(2*sin(.4*t*sin(vec3(i,1+i,2-i)))-v+vec3(0.04*sin(10*v.y),0.04*sin(10*v.z+t+v.x),9));
-	return y;
+		y -= 1/length(2*sin(.4*t*sin(vec3(i,1+i,2-i)))-v+vec3(.04*sin(10*v.y),.04*sin(10*v.z+t+v.x),9));
 }
 void main() {
 //	float y,o;//,e=1e-3;
@@ -11,8 +10,8 @@ void main() {
 	h.x=.001;
 
 	for(int i=0; i<50; ++i)
-		g = vec3(F(c+h), F(c+h.yxz), F(c+h.yzx))-F(c),
-		c += min(.0001*F(c)/length(g),1)*v;
+		g = vec3((F(c+h),y), (F(c+h.yxz),y), (F(c+h.yzx),y))-(F(c),y),
+		c += min(.0001*y/length(g),1)*v;
 
 	g = normalize(g);
 	h = normalize(sin(vec3(t,1.1*t,-1)));
@@ -20,5 +19,6 @@ void main() {
 	y = dot(v, reflect(h, g)); //*max(0.1*t-20,1);
 	gl_FragColor = y*y;
 	gl_FragColor.y+=dot(h,g);
-//	gl_FragColor.y += sin(c.x)*sin(c.z+t);
+	gl_FragColor.x += sin(length(c)-t);
+//	gl_FragColor.x += sin(c.x)*sin(c.z+t)*sin(t/5);
 }
