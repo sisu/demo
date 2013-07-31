@@ -2,7 +2,7 @@ float t = 300*gl_Color.x,y;
 void F(vec3 v) {
 	y=4;
 	for(int i=0; i<9; ++i)
-		y -= 1/length(2*sin(.4*t*sin(vec3(i,1+i,2-i)))-v+vec3(.04*sin(10*v.y),.04*sin(10*v.z+t+v.x),9));
+		y -= 1/length(2*sin(.4*t*sin(vec3(i,1+i,2-i)))-v+vec3(.04*sin(10*v.y),.04*sin(10*v.z+t+v.x),9+exp(.1*t-19)));
 }
 void main() {
 //	float y,o;//,e=1e-3;
