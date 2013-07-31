@@ -390,6 +390,6 @@ MS	equ	32*musiciters*notetime
 
 ;ifreqmod:	resd	1
 
-music:	resw	MS + 2*FREQ
+music:	resw	MS + 4*FREQ
 
 memsize	equ	$ - $$
