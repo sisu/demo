@@ -295,8 +295,8 @@ endtime	equ	MS*1000/FREQ+500
 	push	event
 	call	F(PollEvent)
 
-	add	esp,6*4
-;	times	6	pop	eax
+;	add	esp,6*4
+	times	6	pop	eax
 	cmp	byte	[event],2
 	jne	introloop
 end:
