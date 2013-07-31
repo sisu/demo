@@ -7,7 +7,7 @@ for t in fullscreen window; do
 		./cshader WIDTH $x HEIGHT $y < march.frag > t.frag.small
 		if [ $t == fullscreen ]; then f=0x80000000; else f=0; fi
 		nasm -f bin intro.asm -o t -dWIDTH=$x -dHEIGHT=$y -dFULLSCREEN=$f
-		7z a -tGZip -mx=9 t.gz t
+		7z a -tGZip -mx=9 t.gz t >/dev/null
 		p="out/intro_${x}x${y}_${t}"
 		cat unpack.header t.gz > $p
 		rm t t.gz
