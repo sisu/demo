@@ -28,10 +28,11 @@ soft: soft.asm
 #	du -b $@
 
 packed: intro unpack.header
+	cp $< t
 #	gzip -n --best -f -c $< > $<.gz
-	7z a -tGZip -mx=9 $<.gz $<
+	7z a -tGZip -mx=9 $<.gz t
 	cat unpack.header $<.gz > $@
-	rm $<.gz
+	rm t $<.gz
 	chmod a+rx $@
 	du -b $@
 

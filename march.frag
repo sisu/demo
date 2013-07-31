@@ -17,7 +17,7 @@ void main() {
 	g = normalize(g);
 	h = normalize(sin(vec3(t,1.1*t,-1)));
 //	h = normalize(vec3(sin(t),sin(1.1*t),-1));
-	y = dot(v, reflect(h, g));
+	y = dot(v, reflect(h, g)); //*max(0.1*t-20,1);
 	gl_FragColor = y*y;
 	gl_FragColor.y+=dot(h,g);
 //	gl_FragColor.y += sin(c.x)*sin(c.z+t);
