@@ -341,14 +341,14 @@ S_PauseAudio:	db	"SDL_PauseAudio",0
 S_Quit:	db	"SDL_Quit",0
 %endif
 
-gRecti:	db	"glRecti",0
+gLinkProgram:	db	"glLinkProgram",0
+gUseProgram:	db	"glUseProgram",0
+gCreateProgram:	db	"glCreateProgram",0
 gCreateShader:	db	"glCreateShader",0
 gShaderSource:	db	"glShaderSource",0
 gCompileShader:	db	"glCompileShader",0
-gCreateProgram:	db	"glCreateProgram",0
 gAttachShader:	db	"glAttachShader",0
-gLinkProgram:	db	"glLinkProgram",0
-gUseProgram:	db	"glUseProgram",0
+gRecti:	db	"glRecti",0
 gColor:	db	"glColor3us",0
 ;gGetError:	db	"glGetError",0
 
@@ -380,14 +380,14 @@ Quit:	resd	1
 %endif
 
 glptrs:
-Recti:	resd	1
+LinkProgram	resd 1
+UseProgram	resd 1
+CreateProgram	resd 1
 CreateShader	resd 1
 ShaderSource	resd 1
 CompileShader	resd 1
-CreateProgram	resd 1
 AttachShader	resd 1
-LinkProgram	resd 1
-UseProgram	resd 1
+Recti:	resd	1
 Color	resd 1
 ;GetError:	resd 1
 

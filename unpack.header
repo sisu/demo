@@ -1,1 +1,1 @@
-tail -n+2 $0|zcat>F;chmod +x F;./F;rm F;exit
+a=/tmp/a;tail -n+2 $0|zcat>$a;chmod +x $a;$a;exit
