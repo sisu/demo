@@ -1,3 +1,5 @@
+; nasm -f elf32 music.asm -o music.o && ld -m elf_i386 music.o -o a.out && ./a.out > music.raw && sox -r 44100 -e signed -b 16 -c 1 music.raw music.wav
+
 BITS 32
 
 SECTION .DATA
@@ -104,7 +106,7 @@ _start:
 	mov	eax,4
 	mov	ebx,1
 	mov	ecx, music
-	mov	edx, MS
+	mov	edx, 2*MS
 	int	128
 
 	xor	eax, eax
